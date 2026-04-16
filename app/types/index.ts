@@ -5,13 +5,15 @@ export interface RegistrationData {
   password: string;
 }
 
-export interface ResponseData {
+export interface ResponseData<T> {
   status: number;
   message: string;
+  data: T;
 }
 
-export interface LoginResponseData extends ResponseData {
-  data: {
-    token: string;
-  };
+export interface ProfileData {
+  email: string;
+  first_name: string;
+  last_name: string;
+  profile_image: string;
 }

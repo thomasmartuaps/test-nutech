@@ -1,26 +1,17 @@
 import { combineReducers } from "redux";
 import type { UserAction } from "../actions";
-
-export interface User {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  phone: string;
-  website: string;
-  img?: string;
-}
+import type { ProfileData } from "~/types";
 
 interface UsersState {
-  users: Array<User>;
+  profile: ProfileData | null;
+  balance: number;
   isLoading: boolean;
-  currentUser: User | null;
 }
 
 const initUsersState: UsersState = {
-  users: [],
+  profile: null,
+  balance: 0,
   isLoading: false,
-  currentUser: null,
 };
 
 export function userReducer(state = initUsersState, action: UserAction) {
@@ -31,48 +22,10 @@ export function userReducer(state = initUsersState, action: UserAction) {
         ...state,
         isLoading: true,
       };
-    case "SET_LOADING":
+    case "SET_PROFILE":
       return {
         ...state,
-        isLoading: payload.isLoading,
-      };
-    case "EDIT_USER":
-      const newUser = payload.user;
-      const usersList = state.users.map((val) => {
-        if (newUser.id === val.id) {
-          return newUser;
-        }
-        return val;
-      });
-      return {
-        ...state,
-        users: usersList,
-        isLoading: false,
-      };
-    case "ADD_USER":
-      const newUsers = [...state.users, payload.user];
-      return {
-        ...state,
-        users: newUsers,
-        isLoading: false,
-      };
-    case "DELETE_USER":
-      const deletedUser = state.users.filter((val) => val.id !== payload.id);
-      return {
-        ...state,
-        users: deletedUser,
-        isLoading: false,
-      };
-    case "SET_USERS":
-      const fetchedUsersWithImg = payload.users.map((val) => {
-        return {
-          ...val,
-          img: `https://picsum.photos/id/${val.id}/200/300`,
-        };
-      });
-      return {
-        ...state,
-        users: fetchedUsersWithImg,
+        profile: payload.profile,
         isLoading: false,
       };
     default:

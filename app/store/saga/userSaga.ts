@@ -1,15 +1,18 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
-import type { LoginResponseData, ResponseData } from "~/types";
+import type { ProfileData, ResponseData } from "~/types";
 import token from "~/utils/token";
 import type { UserAction } from "../actions";
-import { login, registration } from "~/api";
+import { getProfile, login, registration } from "~/api";
+import { act } from "react";
 
 function* registrationSaga(action: UserAction) {
   if (action.type !== "REGISTRATION") {
     return;
   }
   try {
-    const res: ResponseData = yield call(registration, { ...action.payload });
+    const res: ResponseData<null> = yield call(registration, {
+      ...action.payload,
+    });
     yield put({
       type: "SET_USERS",
       payload: {},
@@ -24,7 +27,10 @@ function* loginSaga(action: UserAction) {
     return;
   }
   try {
-    const res: LoginResponseData = yield call(login, action.payload);
+    const res: ResponseData<{ token: string }> = yield call(
+      login,
+      action.payload,
+    );
     yield put({
       type: "SET_USERS",
       payload: {},
@@ -35,9 +41,47 @@ function* loginSaga(action: UserAction) {
   }
 }
 
+function* fetchProfileSaga(action: UserAction) {
+  if (action.type !== "FETCH_PROFILE") {
+    return;
+  }
+  try {
+    const tokenValue = token.get();
+    if (!tokenValue) {
+      console.error("No token found. User might not be logged in.");
+      throw new Error("No token found. User might not be logged in.");
+    }
+    const res: ResponseData<ProfileData> = yield call(getProfile, tokenValue);
+    const profile = res.data;
+    yield put({
+      type: "SET_PROFILE",
+      payload: { profile },
+    });
+  } catch (error) {
+    console.error("Error occurred while fetching user profile:", error);
+  }
+}
+
+function* setProfileSaga(action: UserAction) {
+  if (action.type !== "SET_PROFILE") {
+    return;
+  }
+  try {
+    const { profile } = action.payload;
+    yield put({
+      type: "SET_PROFILE",
+      payload: { profile },
+    });
+  } catch (error) {
+    console.error("Error occurred while setting user profile:", error);
+  }
+}
+
 export function* userSagaWatcher() {
   yield all([
     takeEvery("REGISTRATION", registrationSaga),
     takeEvery("LOGIN", loginSaga),
+    takeEvery("FETCH_PROFILE", fetchProfileSaga),
+    takeEvery("SET_PROFILE", setProfileSaga),
   ]);
 }

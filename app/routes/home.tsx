@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../views/welcome/welcome";
 import Register from "~/views/register/register";
+import HomePage from "../views/home/homepage";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,5 +10,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  const isLoggedIn = false; // Replace with actual authentication logic
+
+  if (!isLoggedIn) {
+    return <HomePage />;
+  }
   return <Register />;
 }

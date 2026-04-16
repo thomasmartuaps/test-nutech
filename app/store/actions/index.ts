@@ -1,5 +1,4 @@
-import type { RegistrationData } from "~/types";
-import type { User } from "../reducers";
+import type { RegistrationData, ProfileData } from "~/types";
 
 export type UserAction =
   | {
@@ -14,6 +13,16 @@ export type UserAction =
       };
     }
   | {
+      type: "FETCH_PROFILE";
+      payload: {};
+    }
+  | {
+      type: "SET_PROFILE";
+      payload: {
+        profile: ProfileData;
+      };
+    }
+  | {
       type: "SET_LOADING";
       payload: {
         isLoading: boolean;
@@ -22,24 +31,18 @@ export type UserAction =
   | {
       type: "EDIT_USER";
       payload: {
-        user: User;
+        user: ProfileData;
       };
     }
   | {
       type: "ADD_USER";
       payload: {
-        user: User;
+        user: ProfileData;
       };
     }
   | {
       type: "DELETE_USER";
       payload: {
         id: number;
-      };
-    }
-  | {
-      type: "SET_USERS";
-      payload: {
-        users: Array<User>;
       };
     };
