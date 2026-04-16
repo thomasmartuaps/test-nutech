@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./register.css";
-import { useAppDispatch } from "~/store/hooks";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { useNavigate } from "react-router";
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -15,9 +16,12 @@ const Register: React.FC = () => {
   const [lastNameEmpty, setLastNameEmpty] = useState(false);
   const [emailEmpty, setEmailEmpty] = useState(false);
   const [passwordEmpty, setPasswordEmpty] = useState(false);
-  const [formError, setFormError] = useState(false);
+  const registrationError = useAppSelector(
+    (state) => state.users.regisErrorMessage,
+  );
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -54,7 +58,7 @@ const Register: React.FC = () => {
     }
     dispatch({
       type: "REGISTRATION",
-      payload: { ...formData },
+      payload: { ...formData, navigate: navigate },
     });
   };
   return (
@@ -76,7 +80,7 @@ const Register: React.FC = () => {
             className={`form-input ${emailEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${emailEmpty ? "" : "visible"}`}>
+          <text className={`error-message ${emailEmpty ? "visible" : ""}`}>
             email tidak boleh kosong
           </text>
           <input
@@ -86,7 +90,7 @@ const Register: React.FC = () => {
             className={`form-input ${firstNameEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${firstNameEmpty ? "" : "visible"}`}>
+          <text className={`error-message ${firstNameEmpty ? "visible" : ""}`}>
             nama depan tidak boleh kosong
           </text>
           <input
@@ -96,7 +100,7 @@ const Register: React.FC = () => {
             className={`form-input ${lastNameEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${lastNameEmpty ? "" : "visible"}`}>
+          <text className={`error-message ${lastNameEmpty ? "visible" : ""}`}>
             nama belakang tidak boleh kosong
           </text>
           <input
@@ -105,7 +109,7 @@ const Register: React.FC = () => {
             className={`form-input ${passwordEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${passwordEmpty ? "" : "visible"}`}>
+          <text className={`error-message ${passwordEmpty ? "visible" : ""}`}>
             password tidak boleh kosong
           </text>
           <input
@@ -128,6 +132,11 @@ const Register: React.FC = () => {
           <p className="login-link">
             sudah punya akun? login <a href="/login">di sini</a>
           </p>
+          <text
+            className={`error-message ${registrationError ? "visible" : ""}`}
+          >
+            {registrationError}
+          </text>
         </form>
       </div>
 

@@ -1,0 +1,163 @@
+.topup-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.topup-left {
+  flex: 1;
+  min-width: 300px;
+}
+
+.topup-right {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Header */
+.topup-header {
+  margin-bottom: 32px;
+}
+
+.topup-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.topup-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* Form */
+.topup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topup-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.topup-input:focus {
+  outline: none;
+  border-color: #ff3b30;
+  box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.1);
+}
+
+.topup-input::placeholder {
+  color: #999;
+}
+
+.topup-button {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #ff3b30;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.topup-button:hover:not(.disabled) {
+  background-color: #e63128;
+}
+
+.topup-button:active:not(.disabled) {
+  background-color: #cc2818;
+}
+
+.topup-button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Options Grid */
+.topup-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.topup-option {
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.topup-option:hover {
+  border-color: #ff3b30;
+  color: #ff3b30;
+}
+
+.topup-option.active {
+  background-color: #ff3b30;
+  color: white;
+  border-color: #ff3b30;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .topup-container {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .topup-right {
+    order: -1;
+  }
+
+  .topup-title {
+    font-size: 24px;
+  }
+
+  .topup-options-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .topup-container {
+    padding: 12px;
+  }
+
+  .topup-title {
+    font-size: 20px;
+  }
+
+  .topup-options-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .topup-button {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .topup-input {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}

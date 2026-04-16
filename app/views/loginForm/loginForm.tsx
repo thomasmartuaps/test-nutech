@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./register.css";
-import { useAppDispatch } from "~/store/hooks";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +10,7 @@ const Login: React.FC = () => {
   const [emailEmpty, setEmailEmpty] = useState(false);
   const [passwordEmpty, setPasswordEmpty] = useState(false);
   const dispatch = useAppDispatch();
+  const loginError = useAppSelector((state) => state.users.loginErrorMessage);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -85,6 +86,9 @@ const Login: React.FC = () => {
           <p className="login-link">
             belum punya akun? registrasi <a href="/">di sini</a>
           </p>
+          <text className={`error-message ${loginError ? "visible" : ""}`}>
+            {loginError}
+          </text>
         </form>
       </div>
 

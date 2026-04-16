@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
-import Register from "~/views/register/register";
 import HomePage from "../views/home/homepage";
+import token from "~/utils/token";
+import { useNavigate } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,10 +11,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const isLoggedIn = false; // Replace with actual authentication logic
-
+  const isLoggedIn = !!token.get();
+  const navigate = useNavigate();
   if (!isLoggedIn) {
-    return <HomePage />;
+    throw navigate("/login"); // Redirect to login page if user is not logged in
   }
-  return <Register />;
+  return <HomePage />;
 }

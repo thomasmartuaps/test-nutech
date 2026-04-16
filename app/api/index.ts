@@ -1,5 +1,11 @@
 import axios from "axios";
-import type { ProfileData, RegistrationData, ResponseData } from "~/types";
+import type {
+  Banner,
+  ProfileData,
+  RegistrationData,
+  ResponseData,
+  Service,
+} from "~/types";
 
 const API_BASE_URL = "https://take-home-test-api.nutech-integrasi.com";
 
@@ -46,6 +52,47 @@ export async function getProfile(token: string) {
         Authorization: `Bearer ${token}`,
       },
     },
+  );
+  return res.data;
+}
+
+export async function getBalance(token: string) {
+  const res: { data: ResponseData<{ balance: number }> } = await axios.get(
+    `${API_BASE_URL}/balance`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return res.data;
+}
+
+export async function topUp(token: string, amount: number) {
+  const res: { data: ResponseData<null> } = await axios.post(
+    `${API_BASE_URL}/top-up`,
+    {
+      top_up_amount: amount,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return res.data;
+}
+
+export async function getBanners() {
+  const res: { data: ResponseData<{ banners: Banner[] }> } = await axios.get(
+    `${API_BASE_URL}/banners`,
+  );
+  return res.data;
+}
+
+export async function getServices() {
+  const res: { data: ResponseData<{ services: Service[] }> } = await axios.get(
+    `${API_BASE_URL}/services`,
   );
   return res.data;
 }

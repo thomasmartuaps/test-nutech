@@ -1,7 +1,7 @@
-import LoginForm from "~/views/loginForm/loginForm";
-import type { Route } from "./+types/login";
+import type { Route } from "./+types/home";
 import token from "~/utils/token";
 import { useNavigate } from "react-router";
+import TopUp from "~/views/topUp/topUp";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,12 +10,11 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Login() {
+export default function Home() {
   const isLoggedIn = !!token.get();
   const navigate = useNavigate();
-
-  if (isLoggedIn) {
-    throw navigate("/"); // Redirect to home page if user is already logged in
+  if (!isLoggedIn) {
+    throw navigate("/login"); // Redirect to login page if user is not logged in
   }
-  return <LoginForm />;
+  return <TopUp />;
 }

@@ -151,7 +151,7 @@ body {
   visibility: hidden;
 }
 .error-message.visible {
-  visibility: visible;
+  visibility: visible !important;
 }
 
 /* Responsive Design */

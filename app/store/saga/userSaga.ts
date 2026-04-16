@@ -3,7 +3,6 @@ import type { ProfileData, ResponseData } from "~/types";
 import token from "~/utils/token";
 import type { UserAction } from "../actions";
 import { getProfile, login, registration } from "~/api";
-import { act } from "react";
 
 function* registrationSaga(action: UserAction) {
   if (action.type !== "REGISTRATION") {
@@ -11,10 +10,17 @@ function* registrationSaga(action: UserAction) {
   }
   try {
     const res: ResponseData<null> = yield call(registration, {
-      ...action.payload,
+      ...action.payload.data,
     });
+    if (res.status !== 0) {
+      yield put({
+        type: "SET_REGIS_ERROR",
+        payload: { error: res.message ?? "Failed to register user." },
+      });
+      return;
+    }
     yield put({
-      type: "SET_USERS",
+      type: "CLEAR_REGIS_ERROR",
       payload: {},
     });
   } catch (error) {
@@ -29,13 +35,20 @@ function* loginSaga(action: UserAction) {
   try {
     const res: ResponseData<{ token: string }> = yield call(
       login,
-      action.payload,
+      action.payload.data,
     );
+    if (res.status !== 0) {
+      yield put({
+        type: "SET_LOGIN_ERROR",
+        payload: { error: res.message ?? "Failed to login user." },
+      });
+      return;
+    }
+    token.save(res.data.token);
     yield put({
-      type: "SET_USERS",
+      type: "CLEAR_LOGIN_ERROR",
       payload: {},
     });
-    token.save(res.data.token);
   } catch (error) {
     console.error("Error occurred while logging in user:", error);
   }
@@ -52,6 +65,11 @@ function* fetchProfileSaga(action: UserAction) {
       throw new Error("No token found. User might not be logged in.");
     }
     const res: ResponseData<ProfileData> = yield call(getProfile, tokenValue);
+
+    if (res.status === 108) {
+      token.remove();
+      return;
+    }
     const profile = res.data;
     yield put({
       type: "SET_PROFILE",
