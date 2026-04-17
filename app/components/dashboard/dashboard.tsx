@@ -1,14 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./dashboard.css";
 import type { ProfileData } from "~/types";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
 
 interface DashboardProps {
   children: React.ReactNode;
-  user: ProfileData | null;
-  selectedMenu: string;
+  selectedMenu: "top-up" | "transaction" | "account" | "none";
 }
 
-const Dashboard = ({ children, user, selectedMenu }: DashboardProps) => {
+const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.users.profile);
+  const balance = useAppSelector((state) => state.transactions.balance);
+  const [saldoVisible, setSaldoVisible] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!user) {
+      dispatch({
+        type: "FETCH_PROFILE",
+        payload: {},
+      });
+    }
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    if (!balance) {
+      dispatch({
+        type: "FETCH_BALANCE",
+      });
+    }
+  }, [dispatch, balance]);
+
   return (
     <div className="dashboard">
       {/* Navbar */}
@@ -58,8 +80,16 @@ const Dashboard = ({ children, user, selectedMenu }: DashboardProps) => {
           {/* Balance Card */}
           <div className="balance-card">
             <p className="balance-label">Saldo anda</p>
-            <h3 className="balance-amount">Rp • • • • • • •</h3>
-            <a href="#lihat-saldo" className="lihat-saldo">
+            {saldoVisible ? (
+              <h3 className="balance-amount">Rp {balance?.toLocaleString()}</h3>
+            ) : (
+              <h3 className="balance-amount">Rp • • • • • • •</h3>
+            )}
+            <a
+              href="#lihat-saldo"
+              className="lihat-saldo"
+              onClick={() => setSaldoVisible(!saldoVisible)}
+            >
               Lihat Saldo 👁
             </a>
           </div>

@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
-import HomePage from "../views/home/homepage";
 import ProtectedRoute from "~/components/auth/protectedRoute";
+import Transaction from "~/views/transaction/transaction";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <ProtectedRoute>
-      <HomePage />
+      <Transaction />
     </ProtectedRoute>
   );
 }

@@ -1,5 +1,5 @@
 import { all, call, put, take, takeEvery } from "redux-saga/effects";
-import { getBalance, getTransactions, topUp } from "~/api";
+import { getBalance, getTransactions, initiateTransaction, topUp } from "~/api";
 import type { ResponseData, Transaction } from "~/types";
 import token from "~/utils/token";
 import type { TransactionAction } from "../actions";
@@ -84,10 +84,12 @@ export function* getTransactionsSaga(action: TransactionAction) {
     throw new Error("No token found. User might not be logged in.");
   }
   try {
-    const res: ResponseData<Transaction[]> = yield call(
-      getTransactions,
-      tokenValue,
-    );
+    const { offset, limit } = action.payload;
+    const res: ResponseData<Transaction[]> = yield call(getTransactions, {
+      token: tokenValue,
+      offset,
+      limit,
+    });
     yield put({
       type: "SET_TRANSACTIONS",
       payload: {
@@ -99,11 +101,48 @@ export function* getTransactionsSaga(action: TransactionAction) {
   }
 }
 
+export function* transactionPaymentSaga(action: TransactionAction) {
+  if (action.type !== "INITIATE_TRANSACTION") {
+    return;
+  }
+  try {
+    const tokenValue = token.get();
+    if (!tokenValue) {
+      console.error("No token found. User might not be logged in.");
+      throw new Error("No token found. User might not be logged in.");
+    }
+    const res: ResponseData<Transaction> = yield call(initiateTransaction, {
+      serviceCode: action.payload.serviceCode,
+      token: tokenValue,
+    });
+    if (res.status !== 0) {
+      if (res.status === 108) {
+        token.remove();
+        return;
+      }
+      yield put({
+        type: "TRANSACTION_FAILED",
+        payload: { error: res.message ?? "Failed to initiate transaction." },
+      });
+      return;
+    }
+    yield put({
+      type: "TRANSACTION_SUCCESS",
+      payload: {
+        transaction: res.data,
+      },
+    });
+  } catch (error) {
+    console.error("Error initiating transaction:", error);
+  }
+}
+
 export function* transactionSagaWatcher() {
   yield all([
     takeEvery("TOP_UP", topUpSaga),
     takeEvery("GET_BALANCE", getBalanceSaga),
     takeEvery("TOP_UP_SUCCESS", topUpSuccessSaga),
     takeEvery("FETCH_TRANSACTIONS", getTransactionsSaga),
+    takeEvery("INITIATE_TRANSACTION", transactionPaymentSaga),
   ]);
 }

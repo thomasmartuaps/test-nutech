@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import "./topUp.css";
 import Dashboard from "~/components/dashboard/dashboard";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
-import type { Banner, Service } from "~/types";
-import { mockPromo, mockService } from "~/utils/mock";
-import { useNavigate } from "react-router";
+import PopUp from "~/components/popUp/popUp";
 
 const TopUp = () => {
   const [topUpValue, setTopUpValue] = useState<string>("");
+  const [confirmPopUpOpen, setConfirmPopUpOpen] = useState(false);
+  const [successPopUpOpen, setSuccessPopUpOpen] = useState(false);
 
   const topUpOptions = [
     { id: "option-1", amount: 10000, label: "Rp10.000" },
@@ -18,9 +18,8 @@ const TopUp = () => {
     { id: "option-6", amount: 500000, label: "Rp500.000" },
   ];
 
-  const userProfile = useAppSelector((state) => state.users.profile);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { isTopUpSuccess } = useAppSelector((state) => state.transactions);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -32,26 +31,26 @@ const TopUp = () => {
 
   const handleOptionClick = (amount: number) => {
     setTopUpValue(amount.toString());
-    dispatch({
-      type: "SET_TOP_UP_AMOUNT",
-      payload: {
-        amount,
-        navigate,
-      },
-    });
   };
 
   const handleTopUp = () => {
-    if (topUpValue.trim() !== "") {
-      console.log("Top Up Amount:", topUpValue);
-      // Add top-up logic here
-    }
+    setConfirmPopUpOpen(true);
+  };
+
+  const handleConfirmTopUp = () => {
+    dispatch({
+      type: "TOP_UP",
+      payload: {
+        amount: parseInt(topUpValue),
+      },
+    });
+    setConfirmPopUpOpen(false);
   };
 
   const isTopUpDisabled = topUpValue.trim() === "";
 
   return (
-    <Dashboard user={userProfile} selectedMenu="top-up">
+    <Dashboard selectedMenu="top-up">
       <div className="topup-container">
         <div className="topup-left">
           <div className="topup-header">
@@ -93,6 +92,23 @@ const TopUp = () => {
             ))}
           </div>
         </div>
+
+        <PopUp
+          isOpen={confirmPopUpOpen}
+          onClose={() => setConfirmPopUpOpen(false)}
+          amount={topUpValue}
+          mode={"confirmation"}
+          menuName={"topup"}
+          onConfirm={handleConfirmTopUp}
+        />
+
+        <PopUp
+          isOpen={successPopUpOpen}
+          onClose={() => setSuccessPopUpOpen(false)}
+          amount={topUpValue}
+          mode={isTopUpSuccess ? "success" : "error"}
+          menuName={"topup"}
+        />
       </div>
     </Dashboard>
   );

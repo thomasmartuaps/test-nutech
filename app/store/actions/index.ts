@@ -116,11 +116,35 @@ export type TransactionAction =
     }
   | {
       type: "FETCH_TRANSACTIONS";
-      payload: {};
+      payload: {
+        offset: number;
+        limit: number;
+      };
     }
   | {
       type: "SET_TRANSACTIONS";
       payload: {
         transactions: Transaction[];
+      };
+    }
+  | {
+      type: "INITIATE_TRANSACTION";
+      payload: {
+        serviceCode: string;
+      };
+    }
+  | {
+      type: "TRANSACTION_SUCCESS";
+      payload: {};
+    }
+  | {
+      type: "CLEAR_TRANSACTION_SUCCESS";
+      payload: {};
+    }
+  | { type: "CLEAR_TRANSACTION_ERROR"; payload: {} }
+  | {
+      type: "TRANSACTION_FAILED";
+      payload: {
+        error: string;
       };
     };

@@ -12,7 +12,6 @@ function* bannerSaga(action: ModuleAction) {
   try {
     const res: ResponseData<Banner[]> = yield call(getBanners);
     // Dispatch an action to set the banners in the store
-    console.log("Fetched banners:", res.data);
     yield put({
       type: "SET_BANNERS",
       payload: {
@@ -38,10 +37,10 @@ function* serviceSaga(action: ModuleAction) {
     const res: ResponseData<Service[]> = yield call(getServices, tokenValue);
     // Dispatch an action to set the services in the store
     if (res.status === 108) {
+      console.log("Token expired or invalid. Removing token.");
       token.remove();
       return;
     }
-    console.log("Fetched services:", res.data);
     yield put({
       type: "SET_SERVICES",
       payload: {
@@ -49,6 +48,7 @@ function* serviceSaga(action: ModuleAction) {
       },
     });
   } catch (error) {
+    console.log(error);
     console.error("Error occurred while fetching services:", error);
   }
 }

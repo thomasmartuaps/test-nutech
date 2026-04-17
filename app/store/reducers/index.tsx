@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import type { ModuleAction, UserAction } from "../actions";
 import type { Banner, ProfileData, Service } from "~/types";
 import type { Module } from "@reduxjs/toolkit/query";
+import { transactionReducer } from "./transaction";
 
 interface UsersState {
   profile: ProfileData | null;
@@ -116,5 +117,6 @@ export function moduleReducer(state = initModuleState, action: ModuleAction) {
 
 export const rootReducer = combineReducers({
   users: userReducer,
-  modules: moduleReducer,
+  information: moduleReducer,
+  transactions: transactionReducer,
 });

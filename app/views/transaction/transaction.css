@@ -1,0 +1,137 @@
+.payment-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Header */
+.payment-header {
+  margin-bottom: 24px;
+}
+
+.payment-label {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Service Section */
+.service-section {
+  margin-bottom: 32px;
+}
+
+.service-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.service-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+/* Payment Form */
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.payment-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+}
+
+.payment-input:focus {
+  outline: none;
+  border-color: #ddd;
+}
+
+/* Pay Button */
+.pay-button {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #ff3b30;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pay-button:hover {
+  background-color: #e63128;
+}
+
+.pay-button:active {
+  background-color: #cc2818;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 16px;
+  }
+
+  .service-name {
+    font-size: 16px;
+  }
+
+  .payment-input {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .pay-button {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-container {
+    padding: 12px;
+  }
+
+  .payment-label {
+    font-size: 12px;
+  }
+
+  .service-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .service-name {
+    font-size: 14px;
+  }
+
+  .payment-input {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .pay-button {
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+}

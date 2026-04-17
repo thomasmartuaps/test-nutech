@@ -13,8 +13,7 @@ const HomePage = () => {
   const [activePromos, setActivePromos] = React.useState<Banner[]>([]);
 
   const dispatch = useAppDispatch();
-  const { banners, services } = useAppSelector((state) => state.modules);
-  const userProfile = useAppSelector((state) => state.users.profile);
+  const { banners, services } = useAppSelector((state) => state.information);
 
   React.useEffect(() => {
     dispatch({
@@ -29,13 +28,12 @@ const HomePage = () => {
   }, [dispatch]);
 
   React.useEffect(() => {
-    console.log("Banners and services updated:", banners, services);
     setActivePromos(banners);
     setAvailableServices(services);
   }, [banners, services]);
 
   function handleServiceClick(service: Service) {
-    redirect(`/payment`);
+    redirect(`/transaction`);
     dispatch({
       type: "SET_ACTIVE_SERVICE",
       payload: {
@@ -45,7 +43,7 @@ const HomePage = () => {
   }
 
   return (
-    <Dashboard user={userProfile} selectedMenu="none">
+    <Dashboard selectedMenu="none">
       {/* Services Section */}
       <section className="services-section">
         <div className="services-grid">

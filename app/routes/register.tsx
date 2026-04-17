@@ -1,8 +1,6 @@
 import type { Route } from "./+types/login";
-import token from "~/utils/token";
-import { useNavigate } from "react-router";
 import Register from "~/views/register/register";
-import { useEffect } from "react";
+import PublicRoute from "~/components/auth/publicRoute";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,12 +10,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Login() {
-  const isLoggedIn = !!token.get();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/"); // Redirect to home page if user is already logged in
-    }
-  }, [isLoggedIn, navigate]);
-  return <Register />;
+  return (
+    <PublicRoute>
+      <Register />
+    </PublicRoute>
+  );
 }

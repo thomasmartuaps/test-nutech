@@ -5,6 +5,7 @@ import type {
   RegistrationData,
   ResponseData,
   Service,
+  Transaction,
 } from "~/types";
 
 const API_BASE_URL = "https://take-home-test-api.nutech-integrasi.com";
@@ -109,9 +110,39 @@ export async function getServices(token: string) {
   return res.data;
 }
 
-export async function getTransactions(token: string) {
-  const res: { data: ResponseData<{ transactions: any[] }> } = await axios.get(
-    `${API_BASE_URL}/transaction/history`,
+export async function getTransactions({
+  token,
+  offset,
+  limit,
+}: {
+  token: string;
+  offset: number;
+  limit: number;
+}) {
+  const res: { data: ResponseData<{ transactions: Transaction[] }> } =
+    await axios.get(
+      `${API_BASE_URL}/transaction/history?offset=${offset}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  return res.data;
+}
+
+export async function initiateTransaction({
+  token,
+  serviceCode,
+}: {
+  token: string;
+  serviceCode: string;
+}) {
+  const res: { data: ResponseData<{ token: string }> } = await axios.post(
+    `${API_BASE_URL}/transaction`,
+    {
+      service_code: serviceCode,
+    },
     {
       headers: {
         Authorization: `Bearer ${token}`,

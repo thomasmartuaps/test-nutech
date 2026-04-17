@@ -32,7 +32,6 @@ function* loginSaga(action: UserAction) {
   if (action.type !== "LOGIN") {
     return;
   }
-  console.log("Login saga triggered with payload:", action.payload);
   try {
     const res: ResponseData<{ token: string }> = yield call(
       login,
@@ -46,7 +45,6 @@ function* loginSaga(action: UserAction) {
       return;
     }
     token.save(res.data.token);
-    console.log("Login successful, token saved");
     yield put({
       type: "CLEAR_LOGIN_ERROR",
       payload: {},
@@ -82,26 +80,10 @@ function* fetchProfileSaga(action: UserAction) {
   }
 }
 
-// function* setProfileSaga(action: UserAction) {
-//   if (action.type !== "SET_PROFILE") {
-//     return;
-//   }
-//   try {
-//     const { profile } = action.payload;
-//     yield put({
-//       type: "SET_PROFILE",
-//       payload: { profile },
-//     });
-//   } catch (error) {
-//     console.error("Error occurred while setting user profile:", error);
-//   }
-// }
-
 export function* userSagaWatcher() {
   yield all([
     takeEvery("REGISTRATION", registrationSaga),
     takeEvery("LOGIN", loginSaga),
     takeEvery("FETCH_PROFILE", fetchProfileSaga),
-    // takeEvery("SET_PROFILE", setProfileSaga),
   ]);
 }
