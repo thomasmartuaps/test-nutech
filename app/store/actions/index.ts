@@ -23,6 +23,10 @@ export type UserAction =
       };
     }
   | {
+      type: "LOGOUT";
+      payload: {};
+    }
+  | {
       type: "FETCH_PROFILE";
       payload: {};
     }

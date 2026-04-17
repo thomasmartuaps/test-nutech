@@ -54,6 +54,17 @@ function* loginSaga(action: UserAction) {
   }
 }
 
+function* logoutSaga(action: UserAction) {
+  if (action.type !== "LOGOUT") {
+    return;
+  }
+  try {
+    token.remove();
+  } catch (error) {
+    console.error("Error occurred while logging out user:", error);
+  }
+}
+
 function* fetchProfileSaga(action: UserAction) {
   if (action.type !== "FETCH_PROFILE") {
     return;
@@ -85,5 +96,6 @@ export function* userSagaWatcher() {
     takeEvery("REGISTRATION", registrationSaga),
     takeEvery("LOGIN", loginSaga),
     takeEvery("FETCH_PROFILE", fetchProfileSaga),
+    takeEvery("LOGOUT", logoutSaga),
   ]);
 }
