@@ -1,0 +1,154 @@
+.all-transactions-container {
+  padding: 24px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Title */
+.transactions-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+/* Transactions List */
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Transaction Card */
+.transaction-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+.transaction-card:hover {
+  background-color: #fafafa;
+}
+
+.transaction-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.transaction-amount {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.transaction-amount.topup {
+  color: #27ae60;
+}
+
+.transaction-amount.payment {
+  color: #ff3b30;
+}
+
+.transaction-datetime {
+  font-size: 12px;
+  color: #999;
+}
+
+.transaction-right {
+  text-align: right;
+  margin-left: 20px;
+}
+
+.transaction-description {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Show More Section */
+.show-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0 24px 0;
+}
+
+.show-more-button {
+  background: none;
+  border: none;
+  color: #ff3b30;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 8px 16px;
+}
+
+.show-more-button:hover {
+  color: #e63128;
+  text-decoration: underline;
+}
+
+.show-more-button:active {
+  color: #cc2818;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .all-transactions-container {
+    padding: 16px 12px;
+  }
+
+  .transaction-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .transaction-right {
+    text-align: left;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .transaction-description {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .all-transactions-container {
+    padding: 12px 8px;
+  }
+
+  .transactions-title {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .transaction-card {
+    padding: 12px 0;
+  }
+
+  .transaction-amount {
+    font-size: 14px;
+  }
+
+  .transaction-datetime {
+    font-size: 11px;
+  }
+
+  .transaction-description {
+    font-size: 12px;
+  }
+
+  .show-more-button {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}

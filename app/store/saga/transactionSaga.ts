@@ -1,9 +1,10 @@
-import { all, call, put, takeEvery } from "redux-saga/effects";
-import { getBalance } from "~/api";
-import type { ResponseData } from "~/types";
+import { all, call, put, take, takeEvery } from "redux-saga/effects";
+import { getBalance, getTransactions, topUp } from "~/api";
+import type { ResponseData, Transaction } from "~/types";
 import token from "~/utils/token";
+import type { TransactionAction } from "../actions";
 
-function* getBalanceSaga(action: any) {
+function* getBalanceSaga(action: TransactionAction) {
   if (action.type !== "GET_BALANCE") {
     return;
   }
@@ -28,9 +29,73 @@ function* getBalanceSaga(action: any) {
   });
 }
 
-function* topUpSaga(action: any) {
+function* topUpSaga(action: TransactionAction) {
   if (action.type !== "TOP_UP") {
     return;
+  }
+  const tokenValue = token.get();
+  if (!tokenValue) {
+    console.error("No token found. User might not be logged in.");
+    throw new Error("No token found. User might not be logged in.");
+  }
+  const res: ResponseData<{ token: string }> = yield call(topUp, {
+    token: tokenValue,
+    amount: action.payload.amount,
+  });
+  if (res.status !== 0) {
+    if (res.status === 108) {
+      token.remove();
+      return;
+    }
+    yield put({
+      type: "SET_TOP_UP_ERROR",
+      payload: { error: res.message ?? "Failed to top up balance." },
+    });
+    return;
+  }
+
+  yield put({
+    type: "TOP_UP_SUCCESS",
+    payload: {},
+  });
+}
+
+export function* topUpSuccessSaga(action: TransactionAction) {
+  if (action.type !== "TOP_UP_SUCCESS") {
+    return;
+  }
+  yield put({
+    type: "GET_BALANCE",
+    payload: {},
+  });
+  yield put({
+    type: "CLEAR_TOP_UP_ERROR",
+    payload: {},
+  });
+}
+
+export function* getTransactionsSaga(action: TransactionAction) {
+  if (action.type !== "FETCH_TRANSACTIONS") {
+    return;
+  }
+  const tokenValue = token.get();
+  if (!tokenValue) {
+    console.error("No token found. User might not be logged in.");
+    throw new Error("No token found. User might not be logged in.");
+  }
+  try {
+    const res: ResponseData<Transaction[]> = yield call(
+      getTransactions,
+      tokenValue,
+    );
+    yield put({
+      type: "SET_TRANSACTIONS",
+      payload: {
+        transactions: res.data,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
   }
 }
 
@@ -38,5 +103,7 @@ export function* transactionSagaWatcher() {
   yield all([
     takeEvery("TOP_UP", topUpSaga),
     takeEvery("GET_BALANCE", getBalanceSaga),
+    takeEvery("TOP_UP_SUCCESS", topUpSuccessSaga),
+    takeEvery("FETCH_TRANSACTIONS", getTransactionsSaga),
   ]);
 }

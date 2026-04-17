@@ -1,12 +1,16 @@
-import type { useNavigate } from "react-router";
-import type { RegistrationData, ProfileData, Banner, Service } from "~/types";
+import type {
+  RegistrationData,
+  ProfileData,
+  Banner,
+  Service,
+  Transaction,
+} from "~/types";
 
 export type UserAction =
   | {
       type: "REGISTRATION";
       payload: {
         data: RegistrationData;
-        navigate: ReturnType<typeof useNavigate>;
       };
     }
   | {
@@ -16,7 +20,6 @@ export type UserAction =
           email: string;
           password: string;
         };
-        navigate: ReturnType<typeof useNavigate>;
       };
     }
   | {
@@ -84,6 +87,24 @@ export type TransactionAction =
       };
     }
   | {
+      type: "TOP_UP_SUCCESS";
+      payload: {};
+    }
+  | {
+      type: "CLEAR_TOP_UP_SUCCESS";
+      payload: {};
+    }
+  | {
+      type: "SET_TOP_UP_ERROR";
+      payload: {
+        error: string;
+      };
+    }
+  | {
+      type: "CLEAR_TOP_UP_ERROR";
+      payload: {};
+    }
+  | {
       type: "GET_BALANCE";
       payload: {};
     }
@@ -91,5 +112,15 @@ export type TransactionAction =
       type: "SET_BALANCE";
       payload: {
         balance: number;
+      };
+    }
+  | {
+      type: "FETCH_TRANSACTIONS";
+      payload: {};
+    }
+  | {
+      type: "SET_TRANSACTIONS";
+      payload: {
+        transactions: Transaction[];
       };
     };

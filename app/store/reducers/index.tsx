@@ -30,6 +30,7 @@ export function userReducer(state = initUsersState, action: UserAction) {
         isLoading: true,
       };
     case "SET_PROFILE":
+      console.log("Setting profile in reducer with payload:", payload);
       return {
         ...state,
         profile: payload.profile,

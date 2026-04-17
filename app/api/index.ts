@@ -34,6 +34,7 @@ export async function login({
   email: string;
   password: string;
 }) {
+  console.log("Attempting to log in with email:", email);
   const res: { data: ResponseData<{ token: string }> } = await axios.post(
     `${API_BASE_URL}/login`,
     {
@@ -68,7 +69,13 @@ export async function getBalance(token: string) {
   return res.data;
 }
 
-export async function topUp(token: string, amount: number) {
+export async function topUp({
+  token,
+  amount,
+}: {
+  token: string;
+  amount: number;
+}) {
   const res: { data: ResponseData<null> } = await axios.post(
     `${API_BASE_URL}/top-up`,
     {
@@ -85,14 +92,31 @@ export async function topUp(token: string, amount: number) {
 
 export async function getBanners() {
   const res: { data: ResponseData<{ banners: Banner[] }> } = await axios.get(
-    `${API_BASE_URL}/banners`,
+    `${API_BASE_URL}/banner`,
   );
   return res.data;
 }
 
-export async function getServices() {
+export async function getServices(token: string) {
   const res: { data: ResponseData<{ services: Service[] }> } = await axios.get(
     `${API_BASE_URL}/services`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return res.data;
+}
+
+export async function getTransactions(token: string) {
+  const res: { data: ResponseData<{ transactions: any[] }> } = await axios.get(
+    `${API_BASE_URL}/transaction/history`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
   return res.data;
 }

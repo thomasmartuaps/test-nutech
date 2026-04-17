@@ -1,20 +1,22 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import type { ModuleAction } from "../actions";
 import { getBanners, getServices } from "~/api";
-import type { Banner, Service } from "~/types";
+import type { Banner, ResponseData, Service } from "~/types";
+import token from "~/utils/token";
 
 function* bannerSaga(action: ModuleAction) {
   // Implement banner-related side effects here
-  if (action.type === "FETCH_BANNERS") {
+  if (action.type !== "FETCH_BANNERS") {
     return;
   }
   try {
-    const banners: Banner[] = yield call(getBanners);
+    const res: ResponseData<Banner[]> = yield call(getBanners);
     // Dispatch an action to set the banners in the store
+    console.log("Fetched banners:", res.data);
     yield put({
       type: "SET_BANNERS",
       payload: {
-        banners,
+        banners: res.data,
       },
     });
   } catch (error) {
@@ -24,16 +26,26 @@ function* bannerSaga(action: ModuleAction) {
 
 function* serviceSaga(action: ModuleAction) {
   // Implement service-related side effects here
-  if (action.type === "FETCH_SERVICES") {
+  if (action.type !== "FETCH_SERVICES") {
     return;
   }
   try {
-    const services: Service[] = yield call(getServices);
+    const tokenValue = token.get();
+    if (!tokenValue) {
+      console.error("No token found. User might not be logged in.");
+      throw new Error("No token found. User might not be logged in.");
+    }
+    const res: ResponseData<Service[]> = yield call(getServices, tokenValue);
     // Dispatch an action to set the services in the store
+    if (res.status === 108) {
+      token.remove();
+      return;
+    }
+    console.log("Fetched services:", res.data);
     yield put({
       type: "SET_SERVICES",
       payload: {
-        services,
+        services: res.data,
       },
     });
   } catch (error) {

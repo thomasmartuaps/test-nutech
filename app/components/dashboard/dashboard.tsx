@@ -49,7 +49,9 @@ const Dashboard = ({ children, user, selectedMenu }: DashboardProps) => {
             <img src="" alt="User Avatar" className="profile-avatar" />
             <div className="profile-info">
               <p className="greeting">Selamat datang,</p>
-              <h2 className="user-name">Kristanto Wibowo</h2>
+              <h2 className="user-name">
+                {user?.first_name + " " + user?.last_name || "User"}
+              </h2>
             </div>
           </div>
 

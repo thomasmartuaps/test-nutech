@@ -30,3 +30,11 @@ export interface Service {
   service_icon: string;
   service_tarrif: string;
 }
+
+export interface Transaction {
+  invoice_number: string;
+  total_amount: number;
+  transaction_type: "topup" | "payment";
+  description: string;
+  created_on: string;
+}

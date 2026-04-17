@@ -2,6 +2,7 @@ import LoginForm from "~/views/loginForm/loginForm";
 import type { Route } from "./+types/login";
 import token from "~/utils/token";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -14,8 +15,11 @@ export default function Login() {
   const isLoggedIn = !!token.get();
   const navigate = useNavigate();
 
-  if (isLoggedIn) {
-    throw navigate("/"); // Redirect to home page if user is already logged in
-  }
+  useEffect(() => {
+    console.log("Checking login status, token value:", token.get());
+    if (isLoggedIn) {
+      navigate("/"); // Redirect to home page if user is already logged in
+    }
+  }, [isLoggedIn, navigate]);
   return <LoginForm />;
 }

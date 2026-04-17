@@ -23,15 +23,19 @@ const HomePage = () => {
     dispatch({
       type: "FETCH_SERVICES",
     });
+    dispatch({
+      type: "FETCH_PROFILE",
+    });
   }, [dispatch]);
 
   React.useEffect(() => {
+    console.log("Banners and services updated:", banners, services);
     setActivePromos(banners);
     setAvailableServices(services);
   }, [banners, services]);
 
   function handleServiceClick(service: Service) {
-    redirect(`/service`);
+    redirect(`/payment`);
     dispatch({
       type: "SET_ACTIVE_SERVICE",
       payload: {

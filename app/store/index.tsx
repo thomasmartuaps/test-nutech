@@ -2,8 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import { rootReducer } from "./reducers";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./saga/rootSaga";
+import { createBrowserRouter } from "react-router";
+
+// const router = createBrowserRouter([...]);
 
 const saga = createSagaMiddleware();
+
+// saga.setContext({ router }); //
 
 const store = configureStore({
   reducer: rootReducer,

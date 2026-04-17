@@ -58,7 +58,7 @@ const Register: React.FC = () => {
     }
     dispatch({
       type: "REGISTRATION",
-      payload: { ...formData, navigate: navigate },
+      payload: { data: formData },
     });
   };
   return (

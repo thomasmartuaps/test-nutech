@@ -1,7 +1,7 @@
 const token = {
   get() {
     const data =
-      typeof window !== "undefined" ? localStorage.getItem("key") : null;
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     return data;
   },
   save(token: string) {
