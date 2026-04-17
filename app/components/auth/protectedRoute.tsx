@@ -7,32 +7,27 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const tokenValue = token.get();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const tokenValue = token.get();
-    if (tokenValue) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-    setIsLoading(false);
-  }, [setIsLoggedIn, setIsLoading]);
-
-  if (isLoading) {
-    return null;
-  }
+  // useEffect(() => {
+  //   const tokenValue = token.get();
+  //   if (tokenValue) {
+  //     setIsLoggedIn(true);
+  //   } else {
+  //     setIsLoggedIn(false);
+  //   }
+  // }, []);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    console.log("ProtectedRoute - isLoggedIn changed:", token);
+    if (!tokenValue) {
       navigate("/login"); // Redirect to login page if user is not logged in
     }
-  }, [isLoggedIn, navigate]);
+  }, [tokenValue, navigate]);
 
-  return isLoggedIn ? <>{children}</> : null;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

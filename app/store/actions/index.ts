@@ -115,7 +115,7 @@ export type TransactionAction =
   | {
       type: "SET_BALANCE";
       payload: {
-        balance: number;
+        balance: string;
       };
     }
   | {

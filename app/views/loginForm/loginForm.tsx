@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "./register.css";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { useNavigate } from "react-router";
-import tokenUtils from "~/utils/token";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,14 +13,6 @@ const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const loginError = useAppSelector((state) => state.users.loginErrorMessage);
   const navigate = useNavigate();
-  const [token, setToken] = useState(tokenUtils.get());
-
-  useEffect(() => {
-    const handler = () =>
-      token !== tokenUtils.get() && setToken(tokenUtils.get());
-    window.addEventListener("storage", handler);
-    () => window.removeEventListener("storage", handler);
-  }, [token, setToken]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -61,12 +52,6 @@ const Login: React.FC = () => {
     console.log("CHECK IF EMAIL AND PASSWORD EMPTY FLAG CHANGED");
   }, [emailEmpty, passwordEmpty]);
 
-  useEffect(() => {
-    console.log("Token value changed:", token);
-    if (token) {
-      navigate("/");
-    }
-  }, [token, navigate]);
   return (
     <div className="registration-container">
       {/* Left Section - Form */}

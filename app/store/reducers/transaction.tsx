@@ -2,7 +2,7 @@ import type { Transaction } from "~/types";
 import type { TransactionAction } from "../actions";
 
 interface TransactionState {
-  balance: number;
+  balance: string;
   isTopUpSuccess: boolean;
   isTransactionSuccess: boolean;
   topUpErrorMessage: string;
@@ -11,7 +11,7 @@ interface TransactionState {
 }
 
 const initTransactionState: TransactionState = {
-  balance: 0,
+  balance: "",
   isTopUpSuccess: false,
   isTransactionSuccess: false,
   topUpErrorMessage: "",

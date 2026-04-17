@@ -7,31 +7,16 @@ interface PublicRouteProps {
 }
 
 const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  const tokenValue = token.get();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const tokenValue = token.get();
     if (tokenValue) {
-      setIsLoggedIn(true);
-      handleRedirectToHome();
-    } else {
-      setIsLoggedIn(false);
+      navigate("/"); // Redirect to home page if user is logged in
     }
-    setIsLoading(false);
-  }, [setIsLoggedIn, setIsLoading]);
+  }, [tokenValue, navigate]);
 
-  const handleRedirectToHome = () => {
-    navigate("/"); // Redirect to home page if user is logged in
-  };
-
-  if (isLoading) {
-    return null;
-  }
-
-  return !isLoggedIn ? <>{children}</> : null;
+  return <>{children}</>;
 };
 
 export default PublicRoute;

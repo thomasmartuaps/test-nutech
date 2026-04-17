@@ -59,6 +59,7 @@ export async function getProfile(token: string) {
 }
 
 export async function getBalance(token: string) {
+  console.log("Fetching balance with token:", token);
   const res: { data: ResponseData<{ balance: number }> } = await axios.get(
     `${API_BASE_URL}/balance`,
     {

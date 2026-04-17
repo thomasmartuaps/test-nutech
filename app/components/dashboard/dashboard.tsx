@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./dashboard.css";
-import type { ProfileData } from "~/types";
+import defaultProfilePic from "~/assets/default-profile.png";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 
 interface DashboardProps {
@@ -13,6 +13,7 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
   const user = useAppSelector((state) => state.users.profile);
   const balance = useAppSelector((state) => state.transactions.balance);
   const [saldoVisible, setSaldoVisible] = React.useState(false);
+  const profileImage = user?.profile_image || defaultProfilePic;
 
   React.useEffect(() => {
     if (!user) {
@@ -24,9 +25,12 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
   }, [dispatch, user]);
 
   useEffect(() => {
+    console.log("Dashboard - balance changed:", balance);
     if (!balance) {
+      console.log("Balance is empty, dispatching GET_BALANCE");
       dispatch({
-        type: "FETCH_BALANCE",
+        type: "GET_BALANCE",
+        payload: {},
       });
     }
   }, [dispatch, balance]);
@@ -42,19 +46,19 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
           </div>
           <div className="navbar-menu">
             <a
-              href="#top-up"
+              href="/top-up"
               className={selectedMenu === "top-up" ? "active" : ""}
             >
               Top Up
             </a>
             <a
-              href="#transaction"
+              href="/transaction"
               className={selectedMenu === "transaction" ? "active" : ""}
             >
               Transaction
             </a>
             <a
-              href="#account"
+              href="/account"
               className={selectedMenu === "account" ? "active" : ""}
             >
               Akun
@@ -68,7 +72,11 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
         {/* User Profile Section */}
         <section className="profile-section">
           <div className="profile-card">
-            <img src="" alt="User Avatar" className="profile-avatar" />
+            <img
+              src={profileImage}
+              alt="User Avatar"
+              className="profile-avatar"
+            />
             <div className="profile-info">
               <p className="greeting">Selamat datang,</p>
               <h2 className="user-name">
@@ -81,12 +89,17 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
           <div className="balance-card">
             <p className="balance-label">Saldo anda</p>
             {saldoVisible ? (
-              <h3 className="balance-amount">Rp {balance?.toLocaleString()}</h3>
+              <h3 className="balance-amount">
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(Number(balance) || 0)}
+              </h3>
             ) : (
               <h3 className="balance-amount">Rp • • • • • • •</h3>
             )}
             <a
-              href="#lihat-saldo"
+              href="#"
               className="lihat-saldo"
               onClick={() => setSaldoVisible(!saldoVisible)}
             >

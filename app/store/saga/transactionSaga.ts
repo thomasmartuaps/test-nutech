@@ -21,10 +21,11 @@ function* getBalanceSaga(action: TransactionAction) {
     token.remove();
     return;
   }
+  console.log("Balance fetched successfully:", res.data.balance);
   yield put({
     type: "SET_BALANCE",
     payload: {
-      balance: res.data.balance,
+      balance: res.data.balance.toString(),
     },
   });
 }

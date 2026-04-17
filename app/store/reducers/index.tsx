@@ -6,7 +6,6 @@ import { transactionReducer } from "./transaction";
 
 interface UsersState {
   profile: ProfileData | null;
-  balance: number;
   isLoading: boolean;
   regisErrorMessage: string;
   loginErrorMessage: string;
@@ -15,7 +14,6 @@ interface UsersState {
 
 const initUsersState: UsersState = {
   profile: null,
-  balance: 0,
   isLoading: false,
   regisErrorMessage: "",
   loginErrorMessage: "",
