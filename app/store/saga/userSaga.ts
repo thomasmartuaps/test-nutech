@@ -58,6 +58,7 @@ function* loginSaga(action: UserAction) {
       type: "CLEAR_LOGIN_ERROR",
       payload: {},
     });
+    yield call(fetchProfileSaga, { type: "FETCH_PROFILE", payload: {} });
   } catch (error: any) {
     if (error.response.data.message) {
       yield put({
@@ -78,6 +79,10 @@ function* logoutSaga(action: UserAction) {
   }
   try {
     token.remove();
+    yield put({
+      type: "SET_PROFILE",
+      payload: { profile: null },
+    });
   } catch (error) {
     console.error("Error occurred while logging out user:", error);
   }

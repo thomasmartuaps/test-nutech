@@ -59,14 +59,16 @@ const TopUp = () => {
           </div>
 
           <div className="topup-form">
+            <i className="bi bi-credit-card"></i>{" "}
             <input
               type="text"
-              value={topUpValue}
+              value={new Intl.NumberFormat("de-DE").format(
+                parseInt(topUpValue),
+              )}
               onChange={handleInputChange}
-              placeholder="masukkan nominal top-up"
+              placeholder={`masukkan nominal top-up`}
               className="topup-input"
             />
-
             <button
               onClick={handleTopUp}
               disabled={isTopUpDisabled}

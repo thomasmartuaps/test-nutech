@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import token from "~/utils/token";
 
 interface ProtectedRouteProps {
@@ -7,27 +8,29 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const tokenValue = token.get();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const tokenValue = token.get();
-  //   if (tokenValue) {
-  //     setIsLoggedIn(true);
-  //   } else {
-  //     setIsLoggedIn(false);
-  //   }
-  // }, []);
+  const dispatch = useAppDispatch();
+  const userProfile = useAppSelector((state) => state.users.profile);
 
   useEffect(() => {
-    console.log("ProtectedRoute - isLoggedIn changed:", tokenValue);
     if (!tokenValue) {
-      navigate("/login"); // Redirect to login page if user is not logged in
+      navigate("/login");
+      return; // Redirect to login page if user is not logged in
     }
   }, [tokenValue, navigate]);
 
-  return <>{children}</>;
+  useEffect(() => {
+    if (tokenValue && !userProfile) {
+      dispatch({
+        type: "FETCH_PROFILE",
+        payload: {},
+      });
+    }
+  }, [tokenValue, userProfile, dispatch]);
+
+  return userProfile ? <>{children}</> : null;
 };
 
 export default ProtectedRoute;
