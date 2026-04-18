@@ -37,7 +37,6 @@ function* serviceSaga(action: ModuleAction) {
     const res: ResponseData<Service[]> = yield call(getServices, tokenValue);
     // Dispatch an action to set the services in the store
     if (res.status === 108) {
-      console.log("Token expired or invalid. Removing token.");
       token.remove();
       return;
     }
@@ -48,7 +47,6 @@ function* serviceSaga(action: ModuleAction) {
       },
     });
   } catch (error: any) {
-    console.log(error);
     if (error.response.data.status === 108) {
       token.remove();
       return;

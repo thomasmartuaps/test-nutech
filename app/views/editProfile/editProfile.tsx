@@ -1,12 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import defaultProfilePic from "~/assets/default-profile.png";
 import "./editProfile.css";
 import Dashboard from "~/components/dashboard/dashboard";
+import { NULL_PROFILE_PIC } from "~/utils/enum";
+import GenericPopUp from "~/components/genericPopUp/genericPopUp";
 
 const EditProfile: React.FC = () => {
   const dispatch = useAppDispatch();
-  const userProfile = useAppSelector((state) => state.users.profile);
+  const {
+    profile: userProfile,
+    editProfileErrorMessage,
+    uploadPictureErrorMessage,
+    uploadPictureSuccessMessage,
+  } = useAppSelector((state) => state.users);
   const {
     email,
     first_name: firstName,
@@ -21,9 +28,13 @@ const EditProfile: React.FC = () => {
     firstName,
     lastName,
   });
-  const [profileImage, setProfileImage] = useState<string>(
-    profilePicture || defaultProfilePic,
-  );
+
+  const [profPicPopupOpen, setProfPicPopupOpen] = useState(false);
+
+  const displayedProfilePicture =
+    profilePicture && profilePicture !== NULL_PROFILE_PIC
+      ? profilePicture
+      : defaultProfilePic;
 
   const handleEditToggle = () => {
     setIsEditable(!isEditable);
@@ -47,22 +58,52 @@ const EditProfile: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const binaryString = event.target?.result as string;
-        setProfileImage(binaryString);
-        dispatch({
-          type: "UPLOAD_PICTURE",
-          payload: binaryString,
-        });
-      };
-      reader.readAsDataURL(file);
+      if (file.size > 100 * 1024) {
+        alert("ukuran file max 100kb");
+        return;
+      }
+      // const reader = new FileReader();
+      // reader.onload = (event) => {
+      //   const binaryString = event.target?.result as string;
+      //   setProfileImage(binaryString);
+      const formData = new FormData();
+      formData.append("file", file);
+      dispatch({
+        type: "UPLOAD_PICTURE",
+        payload: {
+          image: formData,
+        },
+      });
+      // };
+      // reader.readAsDataURL(file);
     }
   };
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT", payload: {} });
   };
+
+  const handleClosePopup = () => {
+    setProfPicPopupOpen(false);
+    dispatch({
+      type: "CLEAR_UPLOAD_SUCCESS",
+      payload: {},
+    });
+    dispatch({
+      type: "CLEAR_UPLOAD_ERROR",
+      payload: {},
+    });
+  };
+
+  useEffect(() => {
+    if (uploadPictureSuccessMessage || uploadPictureErrorMessage) {
+      setProfPicPopupOpen(true);
+    }
+  }, [
+    uploadPictureErrorMessage,
+    uploadPictureSuccessMessage,
+    setProfPicPopupOpen,
+  ]);
 
   return (
     <Dashboard selectedMenu="account">
@@ -71,7 +112,7 @@ const EditProfile: React.FC = () => {
         <div className="profile-picture-section">
           <div className="profile-picture-wrapper">
             <img
-              src={profileImage}
+              src={displayedProfilePicture}
               alt="Profile"
               className="profile-picture"
               onClick={handleProfilePictureClick}
@@ -110,8 +151,8 @@ const EditProfile: React.FC = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                readOnly={!isEditable}
-                className={`form-input ${!isEditable ? "read-only" : ""}`}
+                readOnly={true}
+                className={`form-input read-only`}
               />
             </div>
           </div>
@@ -158,15 +199,25 @@ const EditProfile: React.FC = () => {
           </button>
 
           {/* Logout Button */}
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="logout-button"
-          >
-            Logout
-          </button>
+          {!isEditable ? (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="logout-button"
+            >
+              Logout
+            </button>
+          ) : null}
         </form>
       </div>
+
+      <GenericPopUp
+        isOpen={profPicPopupOpen}
+        onClose={handleClosePopup}
+        mode={uploadPictureSuccessMessage ? "success" : "error"}
+        title={"Update Profile Image"}
+        message={uploadPictureSuccessMessage || uploadPictureErrorMessage}
+      />
     </Dashboard>
   );
 };

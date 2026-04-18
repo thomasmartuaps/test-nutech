@@ -35,7 +35,6 @@ const HomePage = () => {
   }, [banners, services]);
 
   function handleServiceClick(service: Service) {
-    console.log("HEY");
     navigate(`/transaction`);
     dispatch({
       type: "SET_ACTIVE_SERVICE",

@@ -50,7 +50,6 @@ const Register: React.FC = () => {
   };
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(formData, "FORM DATA");
     let isError = false;
     if (!formData.first_name) {
       setFirstNameEmpty(true);
@@ -68,7 +67,6 @@ const Register: React.FC = () => {
       setPasswordEmpty(true);
       isError = true;
     }
-    console.log(isError, "IS ERROR");
     if (!confirmPassword) {
       return;
     }

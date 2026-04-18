@@ -12,7 +12,6 @@ const Transaction = () => {
     (state) => state.transactions,
   );
   const { activeService } = useAppSelector((state) => state.information);
-  console.log(activeService, "SERVICE IN TRANSACTION PAGE");
   const {
     service_code: serviceCode,
     service_name: serviceName,

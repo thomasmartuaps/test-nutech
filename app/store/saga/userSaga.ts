@@ -2,7 +2,7 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 import type { ProfileData, ResponseData } from "~/types";
 import token from "~/utils/token";
 import type { UserAction } from "../actions";
-import { getProfile, login, registration } from "~/api";
+import { getProfile, login, registration, uploadProfilePicture } from "~/api";
 
 function* registrationSaga(action: UserAction) {
   if (action.type !== "REGISTRATION") {
@@ -122,11 +122,54 @@ function* fetchProfileSaga(action: UserAction) {
   }
 }
 
+function* editProfilePictureSaga(action: UserAction) {
+  if (action.type !== "UPLOAD_PICTURE") {
+    return;
+  }
+  try {
+    const tokenValue = token.get();
+    if (!tokenValue) {
+      console.error("No token found. User might not be logged in.");
+      throw new Error("No token found. User might not be logged in.");
+    }
+    const res: ResponseData<ProfileData> = yield call(uploadProfilePicture, {
+      token: tokenValue,
+      image: action.payload.image,
+    });
+
+    yield put({
+      type: "UPLOAD_PICTURE_SUCCESS",
+      payload: {
+        message: res.message,
+      },
+    });
+
+    yield put({
+      type: "FETCH_PROFILE",
+      payload: {},
+    });
+  } catch (error: any) {
+    if (error.response.data.status === 102) {
+      yield put({
+        type: "UPLOAD_PICTURE_ERROR",
+        payload: error.response.data.message,
+      });
+      return;
+    }
+    if (error.response.data.status === 108) {
+      token.remove();
+      return;
+    }
+    console.error("Error occurred while fetching user profile:", error);
+  }
+}
+
 export function* userSagaWatcher() {
   yield all([
     takeEvery("REGISTRATION", registrationSaga),
     takeEvery("LOGIN", loginSaga),
     takeEvery("FETCH_PROFILE", fetchProfileSaga),
     takeEvery("LOGOUT", logoutSaga),
+    takeEvery("UPLOAD_PICTURE", editProfilePictureSaga),
   ]);
 }

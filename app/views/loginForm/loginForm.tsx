@@ -22,7 +22,6 @@ const Login: React.FC = () => {
       ...formData,
       [id]: e.target.value ?? "",
     });
-    console.log(formData);
   };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {

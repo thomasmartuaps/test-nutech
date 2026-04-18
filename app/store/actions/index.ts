@@ -51,9 +51,35 @@ export type UserAction =
       };
     }
   | {
-      type: "DELETE_USER";
+      type: "UPLOAD_PICTURE";
       payload: {
-        id: number;
+        image: File;
+      };
+    }
+  | {
+      type: "UPLOAD_PICTURE_SUCCESS";
+      payload: {
+        message: string;
+      };
+    }
+  | {
+      type: "UPLOAD_PICTURE_ERROR";
+      payload: {
+        error: string;
+      };
+    }
+  | {
+      type: "CLEAR_UPLOAD_ERROR";
+      payload: {};
+    }
+  | {
+      type: "CLEAR_UPLOAD_SUCCESS";
+      payload: {};
+    }
+  | {
+      type: "EDIT_USER_ERROR";
+      payload: {
+        error: string;
       };
     };
 

@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import type { ModuleAction, UserAction } from "../actions";
 import type { Banner, ProfileData, Service } from "~/types";
 import { transactionReducer } from "./transaction";
+import { uploadProfilePicture } from "~/api";
 
 interface UsersState {
   profile: ProfileData | null;
@@ -10,6 +11,9 @@ interface UsersState {
   regisErrorMessage: string;
   loginErrorMessage: string;
   profileErrorMessage: string;
+  editProfileErrorMessage: string;
+  uploadPictureErrorMessage: string;
+  uploadPictureSuccessMessage: string;
 }
 
 const initUsersState: UsersState = {
@@ -19,6 +23,9 @@ const initUsersState: UsersState = {
   regisErrorMessage: "",
   loginErrorMessage: "",
   profileErrorMessage: "",
+  editProfileErrorMessage: "",
+  uploadPictureErrorMessage: "",
+  uploadPictureSuccessMessage: "",
 };
 
 export function userReducer(state = initUsersState, action: UserAction) {
@@ -40,7 +47,6 @@ export function userReducer(state = initUsersState, action: UserAction) {
         isRegistrationSuccess: false,
       };
     case "SET_PROFILE":
-      console.log("Setting profile in reducer with payload:", payload);
       return {
         ...state,
         profile: payload.profile,
@@ -83,6 +89,31 @@ export function userReducer(state = initUsersState, action: UserAction) {
       return {
         ...state,
         profile: payload.user,
+      };
+    case "EDIT_USER_ERROR":
+      return {
+        ...state,
+        editProfileErrorMessage: payload.error,
+      };
+    case "UPLOAD_PICTURE_SUCCESS":
+      return {
+        ...state,
+        uploadPictureSuccessMessage: payload.message,
+      };
+    case "UPLOAD_PICTURE_ERROR":
+      return {
+        ...state,
+        uploadPictureErrorMessage: payload.error,
+      };
+    case "CLEAR_UPLOAD_SUCCESS":
+      return {
+        ...state,
+        uploadPictureSuccessMessage: "",
+      };
+    case "CLEAR_UPLOAD_ERROR":
+      return {
+        ...state,
+        uploadPictureErrorMessage: "",
       };
     default:
       return state;

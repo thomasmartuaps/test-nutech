@@ -18,7 +18,6 @@ function* getBalanceSaga(action: TransactionAction) {
       getBalance,
       tokenValue,
     );
-    console.log("Balance fetched successfully:", res.data.balance);
     yield put({
       type: "SET_BALANCE",
       payload: {

@@ -35,7 +35,6 @@ export async function login({
   email: string;
   password: string;
 }) {
-  console.log("Attempting to log in with email:", email);
   const res: { data: ResponseData<{ token: string }> } = await axios.post(
     `${API_BASE_URL}/login`,
     {
@@ -59,7 +58,6 @@ export async function getProfile(token: string) {
 }
 
 export async function getBalance(token: string) {
-  console.log("Fetching balance with token:", token);
   const res: { data: ResponseData<{ balance: number }> } = await axios.get(
     `${API_BASE_URL}/balance`,
     {
@@ -150,5 +148,26 @@ export async function initiateTransaction({
       },
     },
   );
+  return res.data;
+}
+
+export async function uploadProfilePicture({
+  token,
+  image,
+}: {
+  token: string;
+  image: File;
+}) {
+  const res: { data: ResponseData<ProfileData> } = await axios.put(
+    `${API_BASE_URL}/profile/image`,
+    image,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+
   return res.data;
 }
