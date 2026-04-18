@@ -80,7 +80,11 @@ const PopUp = ({
 
           {/* Footer Link */}
           <div className="popup-footer">
-            {mode === "confirmation" ? (
+            {menuName === "registration" ? (
+              <a href="/login" className="popup-link">
+                Menuju ke login
+              </a>
+            ) : mode === "confirmation" ? (
               <>
                 <button className="popup-link confirm" onClick={handleConfirm}>
                   Ya, lanjutkan {menuName === "topup" ? "Top Up" : `Bayar`}
@@ -94,11 +98,6 @@ const PopUp = ({
                 Kembali ke Beranda
               </a>
             )}
-            {menuName === "registration" ? (
-              <a href="/login" className="popup-link">
-                Menuju ke login
-              </a>
-            ) : null}
           </div>
         </DialogPanel>
       </div>

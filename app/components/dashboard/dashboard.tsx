@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./dashboard.css";
 import defaultProfilePic from "~/assets/default-profile.png";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { NULL_PROFILE_PIC } from "~/utils/enum";
 
 interface DashboardProps {
   children: React.ReactNode;
@@ -13,7 +14,10 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
   const user = useAppSelector((state) => state.users.profile);
   const balance = useAppSelector((state) => state.transactions.balance);
   const [saldoVisible, setSaldoVisible] = React.useState(false);
-  const profileImage = user?.profile_image || defaultProfilePic;
+  const profileImage =
+    user?.profile_image && user.profile_image !== NULL_PROFILE_PIC
+      ? user.profile_image
+      : defaultProfilePic;
 
   React.useEffect(() => {
     if (!user) {
@@ -70,46 +74,48 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
       </nav>
 
       {/* Main Content */}
+
       <main className="dashboard-content">
         {/* User Profile Section */}
-        <section className="profile-section">
-          <div className="profile-card">
-            <img
-              src={profileImage}
-              alt="User Avatar"
-              className="profile-avatar"
-            />
-            <div className="profile-info">
-              <p className="greeting">Selamat datang,</p>
-              <h2 className="user-name">
-                {user?.first_name + " " + user?.last_name || "User"}
-              </h2>
+        {selectedMenu !== "account" ? ( // dashboard doesn't need the profile section when inside account view
+          <section className="profile-section">
+            <div className="profile-card">
+              <img
+                src={profileImage}
+                alt="User Avatar"
+                className="profile-avatar"
+              />
+              <div className="profile-info">
+                <p className="greeting">Selamat datang,</p>
+                <h2 className="user-name">
+                  {user?.first_name + " " + user?.last_name || "User"}
+                </h2>
+              </div>
             </div>
-          </div>
 
-          {/* Balance Card */}
-          <div className="balance-card">
-            <p className="balance-label">Saldo anda</p>
-            {saldoVisible ? (
-              <h3 className="balance-amount">
-                {new Intl.NumberFormat("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                }).format(Number(balance) || 0)}
-              </h3>
-            ) : (
-              <h3 className="balance-amount">Rp • • • • • • •</h3>
-            )}
-            <a
-              href="#"
-              className="lihat-saldo"
-              onClick={() => setSaldoVisible(!saldoVisible)}
-            >
-              Lihat Saldo 👁
-            </a>
-          </div>
-        </section>
-
+            {/* Balance Card */}
+            <div className="balance-card">
+              <p className="balance-label">Saldo anda</p>
+              {saldoVisible ? (
+                <h3 className="balance-amount">
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  }).format(Number(balance) || 0)}
+                </h3>
+              ) : (
+                <h3 className="balance-amount">Rp • • • • • • •</h3>
+              )}
+              <a
+                href="#"
+                className="lihat-saldo"
+                onClick={() => setSaldoVisible(!saldoVisible)}
+              >
+                Lihat Saldo 👁
+              </a>
+            </div>
+          </section>
+        ) : null}
         {children}
       </main>
     </div>

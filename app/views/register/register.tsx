@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./register.css";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
-import { useNavigate } from "react-router";
 import illustrasiLogin from "~/assets/illustrasi-login.png";
 import logo from "~/assets/logo.png";
 import PopUp from "~/components/popUp/popUp";
@@ -13,6 +12,7 @@ const Register: React.FC = () => {
     email: "",
     password: "",
   });
+  const [confirmPassInput, setConfirmPassInput] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(false);
   const [successPopupOpen, setSuccessPopupOpen] = useState(false);
 
@@ -26,7 +26,6 @@ const Register: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const { isRegistrationSuccess } = useAppSelector((state) => state.users);
-  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -47,6 +46,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     const confirmPass = e.target.value === formData.password;
     setConfirmPassword(confirmPass);
+    setConfirmPassInput(e.target.value);
   };
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -92,6 +92,13 @@ const Register: React.FC = () => {
       payload: {},
     });
   };
+
+  useEffect(() => {
+    if (formData.password) {
+      const confirmPass = confirmPassInput === formData.password;
+      setConfirmPassword(confirmPass);
+    }
+  }, [formData.password, setConfirmPassword, confirmPassInput]);
 
   useEffect(() => {
     if (isRegistrationSuccess) {
@@ -147,10 +154,12 @@ const Register: React.FC = () => {
           <input
             type="password"
             placeholder="konfirmasi password"
-            className={`form-input ${confirmPassword ? "" : "input-error"}`}
+            className={`form-input ${confirmPassword || (!confirmPassword && confirmPassInput.length === 0) ? "" : "input-error"}`}
             onChange={handleConfirmPasswordChange}
           />
-          <text className={`error-message ${confirmPassword ? "" : "visible"}`}>
+          <text
+            className={`error-message ${confirmPassword || (!confirmPassword && confirmPassInput.length === 0) ? "" : "visible"}`}
+          >
             password tidak sama
           </text>
           <button
