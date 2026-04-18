@@ -23,7 +23,16 @@ function* registrationSaga(action: UserAction) {
       type: "CLEAR_REGIS_ERROR",
       payload: {},
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.response.data.message) {
+      yield put({
+        type: "SET_REGIS_ERROR",
+        payload: {
+          error: error.response.data.message ?? "Failed to register user.",
+        },
+      });
+      return;
+    }
     console.error("Error occurred while registering user:", error);
   }
 }
@@ -49,7 +58,16 @@ function* loginSaga(action: UserAction) {
       type: "CLEAR_LOGIN_ERROR",
       payload: {},
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.response.data.message) {
+      yield put({
+        type: "SET_LOGIN_ERROR",
+        payload: {
+          error: error.response.data.message ?? "Failed to login user.",
+        },
+      });
+      return;
+    }
     console.error("Error occurred while logging in user:", error);
   }
 }
@@ -86,7 +104,11 @@ function* fetchProfileSaga(action: UserAction) {
       type: "SET_PROFILE",
       payload: { profile },
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error.response.data.status === 108) {
+      token.remove();
+      return;
+    }
     console.error("Error occurred while fetching user profile:", error);
   }
 }

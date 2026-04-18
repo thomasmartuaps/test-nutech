@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   // }, []);
 
   useEffect(() => {
-    console.log("ProtectedRoute - isLoggedIn changed:", token);
+    console.log("ProtectedRoute - isLoggedIn changed:", tokenValue);
     if (!tokenValue) {
       navigate("/login"); // Redirect to login page if user is not logged in
     }

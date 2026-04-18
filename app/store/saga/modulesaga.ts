@@ -47,8 +47,12 @@ function* serviceSaga(action: ModuleAction) {
         services: res.data,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    if (error.response.data.status === 108) {
+      token.remove();
+      return;
+    }
     console.error("Error occurred while fetching services:", error);
   }
 }

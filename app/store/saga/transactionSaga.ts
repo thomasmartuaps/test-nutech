@@ -9,25 +9,29 @@ function* getBalanceSaga(action: TransactionAction) {
     return;
   }
   const tokenValue = token.get();
-  if (!tokenValue) {
-    console.error("No token found. User might not be logged in.");
-    throw new Error("No token found. User might not be logged in.");
+  try {
+    if (!tokenValue) {
+      console.error("No token found. User might not be logged in.");
+      throw new Error("No token found. User might not be logged in.");
+    }
+    const res: ResponseData<{ balance: number }> = yield call(
+      getBalance,
+      tokenValue,
+    );
+    console.log("Balance fetched successfully:", res.data.balance);
+    yield put({
+      type: "SET_BALANCE",
+      payload: {
+        balance: res.data.balance.toString(),
+      },
+    });
+  } catch (error: any) {
+    if (error.response.data.status === 108) {
+      token.remove();
+      return;
+    }
+    console.error("Error fetching balance:", error);
   }
-  const res: ResponseData<{ balance: number }> = yield call(
-    getBalance,
-    tokenValue,
-  );
-  if (res.status === 108) {
-    token.remove();
-    return;
-  }
-  console.log("Balance fetched successfully:", res.data.balance);
-  yield put({
-    type: "SET_BALANCE",
-    payload: {
-      balance: res.data.balance.toString(),
-    },
-  });
 }
 
 function* topUpSaga(action: TransactionAction) {
