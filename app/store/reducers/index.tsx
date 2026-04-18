@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
 import type { ModuleAction, UserAction } from "../actions";
 import type { Banner, ProfileData, Service } from "~/types";
-import type { Module } from "@reduxjs/toolkit/query";
 import { transactionReducer } from "./transaction";
 
 interface UsersState {
@@ -35,7 +34,7 @@ export function userReducer(state = initUsersState, action: UserAction) {
         ...state,
         isRegistrationSuccess: true,
       };
-    case "CLEAR_REGIS_SUCCESS":
+    case "CLEAR_REGISTRATION_SUCCESS":
       return {
         ...state,
         isRegistrationSuccess: false,
