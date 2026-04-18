@@ -41,8 +41,10 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
       <nav className="navbar">
         <div className="navbar-container">
           <div className="navbar-logo">
-            <span className="logo-icon">●</span>
-            <span className="logo-text">SIMS PPOB</span>
+            <a href="/" className="logo-link">
+              <span className="logo-icon">●</span>
+              <span className="logo-text">SIMS PPOB</span>
+            </a>
           </div>
           <div className="navbar-menu">
             <a
@@ -52,7 +54,7 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
               Top Up
             </a>
             <a
-              href="/transaction"
+              href="/transaction-list"
               className={selectedMenu === "transaction" ? "active" : ""}
             >
               Transaction

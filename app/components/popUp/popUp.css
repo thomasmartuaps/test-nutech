@@ -79,6 +79,7 @@
 .popup-message {
   font-size: 14px;
   font-weight: 500;
+  color: #666;
   margin: 0;
 }
 
@@ -112,6 +113,10 @@
 .popup-link:hover {
   color: #e63128;
   text-decoration: underline;
+}
+
+.grey {
+  color: #999 !important;
 }
 
 /* Animations */

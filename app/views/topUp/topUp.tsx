@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./topUp.css";
 import Dashboard from "~/components/dashboard/dashboard";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
@@ -19,7 +19,9 @@ const TopUp = () => {
   ];
 
   const dispatch = useAppDispatch();
-  const { isTopUpSuccess } = useAppSelector((state) => state.transactions);
+  const { isTopUpSuccess, topUpErrorMessage } = useAppSelector(
+    (state) => state.transactions,
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -47,72 +49,87 @@ const TopUp = () => {
     setConfirmPopUpOpen(false);
   };
 
+  const handlePopUpClose = () => {
+    setSuccessPopUpOpen(false);
+    dispatch({ type: "CLEAR_TOP_UP_SUCCESS", payload: {} });
+    dispatch({ type: "CLEAR_TOP_UP_ERROR", payload: {} });
+  };
+
+  useEffect(() => {
+    if (isTopUpSuccess || topUpErrorMessage) {
+      setSuccessPopUpOpen(true);
+    }
+  }, [isTopUpSuccess, topUpErrorMessage, dispatch]);
+
   const isTopUpDisabled = topUpValue.trim() === "";
 
+  const displayedTopUpValue = topUpValue
+    ? new Intl.NumberFormat("de-DE").format(parseInt(topUpValue))
+    : "";
+
   return (
-    <Dashboard selectedMenu="top-up">
-      <div className="topup-container">
-        <div className="topup-left">
-          <div className="topup-header">
-            <p className="topup-subtitle">Silahkan masukan</p>
-            <h1 className="topup-title">Nominal Top Up</h1>
-          </div>
+    <div>
+      <Dashboard selectedMenu="top-up">
+        <div className="topup-container">
+          <div className="topup-left">
+            <div className="topup-header">
+              <p className="topup-subtitle">Silahkan masukan</p>
+              <h1 className="topup-title">Nominal Top Up</h1>
+            </div>
 
-          <div className="topup-form">
-            <i className="bi bi-credit-card"></i>{" "}
-            <input
-              type="text"
-              value={new Intl.NumberFormat("de-DE").format(
-                parseInt(topUpValue),
-              )}
-              onChange={handleInputChange}
-              placeholder={`masukkan nominal top-up`}
-              className="topup-input"
-            />
-            <button
-              onClick={handleTopUp}
-              disabled={isTopUpDisabled}
-              className={`topup-button ${isTopUpDisabled ? "disabled" : ""}`}
-            >
-              Top Up
-            </button>
-          </div>
-        </div>
-
-        <div className="topup-right">
-          <div className="topup-options-grid">
-            {topUpOptions.map((option) => (
+            <div className="topup-form">
+              <i className="bi bi-credit-card"></i>{" "}
+              <input
+                type="text"
+                value={displayedTopUpValue}
+                onChange={handleInputChange}
+                placeholder={`masukkan nominal top-up`}
+                className="topup-input"
+              />
               <button
-                key={option.id}
-                onClick={() => handleOptionClick(option.amount)}
-                className={`topup-option ${
-                  topUpValue === option.amount.toString() ? "active" : ""
-                }`}
+                onClick={handleTopUp}
+                disabled={isTopUpDisabled}
+                className={`topup-button ${isTopUpDisabled ? "disabled" : ""}`}
               >
-                {option.label}
+                Top Up
               </button>
-            ))}
+            </div>
+          </div>
+
+          <div className="topup-right">
+            <div className="topup-options-grid">
+              {topUpOptions.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => handleOptionClick(option.amount)}
+                  className={`topup-option ${
+                    topUpValue === option.amount.toString() ? "active" : ""
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+      </Dashboard>
+      <PopUp
+        isOpen={confirmPopUpOpen}
+        onClose={() => setConfirmPopUpOpen(false)}
+        amount={topUpValue}
+        mode={"confirmation"}
+        menuName={"topup"}
+        onConfirm={handleConfirmTopUp}
+      />
 
-        <PopUp
-          isOpen={confirmPopUpOpen}
-          onClose={() => setConfirmPopUpOpen(false)}
-          amount={topUpValue}
-          mode={"confirmation"}
-          menuName={"topup"}
-          onConfirm={handleConfirmTopUp}
-        />
-
-        <PopUp
-          isOpen={successPopUpOpen}
-          onClose={() => setSuccessPopUpOpen(false)}
-          amount={topUpValue}
-          mode={isTopUpSuccess ? "success" : "error"}
-          menuName={"topup"}
-        />
-      </div>
-    </Dashboard>
+      <PopUp
+        isOpen={successPopUpOpen}
+        onClose={handlePopUpClose}
+        amount={topUpValue}
+        mode={isTopUpSuccess ? "success" : "error"}
+        menuName={"topup"}
+      />
+    </div>
   );
 };
 

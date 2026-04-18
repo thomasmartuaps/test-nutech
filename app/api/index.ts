@@ -79,7 +79,7 @@ export async function topUp({
   amount: number;
 }) {
   const res: { data: ResponseData<null> } = await axios.post(
-    `${API_BASE_URL}/top-up`,
+    `${API_BASE_URL}/topup`,
     {
       top_up_amount: amount,
     },
@@ -120,7 +120,7 @@ export async function getTransactions({
   offset: number;
   limit: number;
 }) {
-  const res: { data: ResponseData<{ transactions: Transaction[] }> } =
+  const res: { data: ResponseData<{ records: Transaction[] }> } =
     await axios.get(
       `${API_BASE_URL}/transaction/history?offset=${offset}&limit=${limit}`,
       {

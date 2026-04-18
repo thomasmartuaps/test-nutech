@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./transactionList.css";
 import Dashboard from "~/components/dashboard/dashboard";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
@@ -18,6 +18,10 @@ const TopUp = () => {
     // Fetch transactions from the server or use mock data
     dispatch({
       type: "FETCH_TRANSACTIONS",
+      payload: {
+        offset,
+        limit,
+      },
     });
   }, [dispatch]);
 

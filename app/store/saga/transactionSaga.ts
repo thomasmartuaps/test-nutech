@@ -90,15 +90,18 @@ export function* getTransactionsSaga(action: TransactionAction) {
   }
   try {
     const { offset, limit } = action.payload;
-    const res: ResponseData<Transaction[]> = yield call(getTransactions, {
-      token: tokenValue,
-      offset,
-      limit,
-    });
+    const res: ResponseData<{ records: Transaction[] }> = yield call(
+      getTransactions,
+      {
+        token: tokenValue,
+        offset,
+        limit,
+      },
+    );
     yield put({
       type: "SET_TRANSACTIONS",
       payload: {
-        transactions: res.data,
+        transactions: res.data.records,
       },
     });
   } catch (error) {

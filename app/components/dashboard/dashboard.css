@@ -280,6 +280,11 @@ body {
   object-fit: cover;
 }
 
+.active {
+  color: #ff3b30 !important;
+  font-weight: 600;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .profile-section {

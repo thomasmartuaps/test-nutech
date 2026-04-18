@@ -36,7 +36,11 @@ export function transactionReducer(
     case "CLEAR_TOP_UP_ERROR":
       return { ...state, topUpErrorMessage: "" };
     case "SET_TRANSACTIONS":
-      return { ...state, transactions: payload.transactions };
+      console.log("Setting transactions in reducer with payload:", payload);
+      return {
+        ...state,
+        transactions: [...state.transactions, ...payload.transactions],
+      };
     case "TRANSACTION_SUCCESS":
       return { ...state, isTransactionSuccess: true };
     case "CLEAR_TRANSACTION_SUCCESS":

@@ -1,5 +1,6 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import "./popUp.css";
+import logo from "~/assets/logo.png";
 
 interface PopUpProps {
   isOpen: boolean;
@@ -35,7 +36,13 @@ const PopUp = ({
           {/* Icon */}
           <div className="popup-icon-wrapper">
             <img
-              src={mode === "success" ? "success" : ""}
+              src={
+                mode === "confirmation"
+                  ? logo
+                  : mode === "success"
+                    ? "https://cdn-icons-png.flaticon.com/512/845/845646.png"
+                    : "https://cdn-icons-png.flaticon.com/512/1828/1828665.png"
+              }
               alt={mode === "success" ? "Success" : "Error"}
               className="popup-icon"
             />
@@ -56,7 +63,9 @@ const PopUp = ({
                   : null}
             </h2>
 
-            <p className="popup-amount">{`Rp${amount}`}</p>
+            <p className="popup-amount">{`Rp${new Intl.NumberFormat(
+              "de-DE",
+            ).format(parseInt(amount))}`}</p>
             {mode !== "confirmation" && (
               <p className="popup-message">
                 {mode === "success" ? "berhasil!" : "gagal"}
@@ -68,13 +77,10 @@ const PopUp = ({
           <div className="popup-footer">
             {mode === "confirmation" ? (
               <>
-                <button
-                  className="popup-button confirm"
-                  onClick={handleConfirm}
-                >
+                <button className="popup-link confirm" onClick={handleConfirm}>
                   Ya, lanjutkan {menuName === "topup" ? "Top Up" : `Bayar`}
                 </button>
-                <button className="popup-button confirm" onClick={onClose}>
+                <button className="popup-link grey" onClick={onClose}>
                   Batalkan
                 </button>
               </>

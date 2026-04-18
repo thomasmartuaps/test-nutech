@@ -1,10 +1,10 @@
 import React from "react";
-import "./dashboard.css";
+import "./homepage.css";
 import Dashboard from "~/components/dashboard/dashboard";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import type { Banner, Service } from "~/types";
 import { mockPromo, mockService } from "~/utils/mock";
-import { redirect } from "react-router";
+import { useNavigate } from "react-router";
 
 const HomePage = () => {
   const [availableServices, setAvailableServices] = React.useState<Service[]>(
@@ -14,6 +14,8 @@ const HomePage = () => {
 
   const dispatch = useAppDispatch();
   const { banners, services } = useAppSelector((state) => state.information);
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     dispatch({
@@ -33,7 +35,8 @@ const HomePage = () => {
   }, [banners, services]);
 
   function handleServiceClick(service: Service) {
-    redirect(`/transaction`);
+    console.log("HEY");
+    navigate(`/transaction`);
     dispatch({
       type: "SET_ACTIVE_SERVICE",
       payload: {
