@@ -3,6 +3,7 @@ import "./dashboard.css";
 import defaultProfilePic from "~/assets/default-profile.png";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { NULL_PROFILE_PIC } from "~/utils/enum";
+import logo from "~/assets/logo.png";
 
 interface DashboardProps {
   children: React.ReactNode;
@@ -44,12 +45,12 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
-          <div className="navbar-logo">
-            <a href="/" className="logo-link">
-              <span className="logo-icon">●</span>
-              <span className="logo-text">SIMS PPOB</span>
-            </a>
-          </div>
+          <a href="/" className="navbar-logo">
+            <span className="logo-icon">
+              <img src={logo} alt={"SIMS PPOB"} />
+            </span>
+            <span className="logo-text">SIMS PPOB</span>
+          </a>
           <div className="navbar-menu">
             <a
               href="/top-up"
