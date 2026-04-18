@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./transaction.css";
 import Dashboard from "~/components/dashboard/dashboard";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
@@ -8,15 +8,16 @@ const Transaction = () => {
   const [confirmPopUpOpen, setConfirmPopUpOpen] = useState(false);
   const [successPopUpOpen, setSuccessPopUpOpen] = useState(false);
   const dispatch = useAppDispatch();
-  const { isTransactionSuccess } = useAppSelector(
+  const { isTransactionSuccess, transactionErrorMessage } = useAppSelector(
     (state) => state.transactions,
   );
   const { activeService } = useAppSelector((state) => state.information);
+  console.log(activeService, "SERVICE IN TRANSACTION PAGE");
   const {
     service_code: serviceCode,
     service_name: serviceName,
     service_icon: serviceIcon,
-    service_tarrif: amount,
+    service_tariff: amount,
   } = activeService || {};
 
   const handleTransaction = () => {
@@ -30,7 +31,19 @@ const Transaction = () => {
         serviceCode,
       },
     });
+    setConfirmPopUpOpen(false);
   };
+  const handlePopUpClose = () => {
+    setSuccessPopUpOpen(false);
+    dispatch({ type: "CLEAR_TRANSACTION_SUCCESS", payload: {} });
+    dispatch({ type: "CLEAR_TRANSACTION_ERROR", payload: {} });
+  };
+
+  useEffect(() => {
+    if (isTransactionSuccess || transactionErrorMessage) {
+      setSuccessPopUpOpen(true);
+    }
+  }, [isTransactionSuccess, transactionErrorMessage, dispatch]);
 
   return (
     <Dashboard selectedMenu="none">
@@ -70,15 +83,17 @@ const Transaction = () => {
         amount={amount ? amount.toString() : ""}
         mode={"confirmation"}
         menuName={"transaction"}
+        serviceName={serviceName}
         onConfirm={handleConfirmTransaction}
       />
 
       <PopUp
         isOpen={successPopUpOpen}
-        onClose={() => setSuccessPopUpOpen(false)}
+        onClose={handlePopUpClose}
         amount={amount ? amount.toString() : ""}
         mode={isTransactionSuccess ? "success" : "error"}
         menuName={"transaction"}
+        serviceName={serviceName}
       />
     </Dashboard>
   );

@@ -5,31 +5,31 @@ export const mockService: Service[] = [
     service_code: "PLN",
     service_name: "Listrik",
     service_icon: "",
-    service_tarrif: "",
+    service_tariff: "",
   },
   {
     service_code: "PULSA",
     service_name: "Pulsa",
     service_icon: "",
-    service_tarrif: "",
+    service_tariff: "",
   },
   {
     service_code: "PAKET_DATA",
     service_name: "Paket Data",
     service_icon: "",
-    service_tarrif: "",
+    service_tariff: "",
   },
   {
     service_code: "BPJS",
     service_name: "BPJS",
     service_icon: "",
-    service_tarrif: "",
+    service_tariff: "",
   },
   {
     service_code: "PDAM",
     service_name: "PDAM",
     service_icon: "",
-    service_tarrif: "",
+    service_tariff: "",
   },
 ];
 
