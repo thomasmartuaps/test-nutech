@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./register.css";
+import "./loginForm.css";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
-import { useNavigate } from "react-router";
+import illustrasiLogin from "~/assets/illustrasi-login.png";
+import logo from "~/assets/logo.png";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,6 @@ const Login: React.FC = () => {
   const [passwordEmpty, setPasswordEmpty] = useState(false);
   const dispatch = useAppDispatch();
   const loginError = useAppSelector((state) => state.users.loginErrorMessage);
-  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -24,6 +24,7 @@ const Login: React.FC = () => {
     });
     console.log(formData);
   };
+
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     let error = false;
@@ -48,9 +49,11 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(emailEmpty, passwordEmpty);
-    console.log("CHECK IF EMAIL AND PASSWORD EMPTY FLAG CHANGED");
-  }, [emailEmpty, passwordEmpty]);
+    dispatch({
+      type: "CLEAR_REGISTRATION_SUCCESS",
+      payload: {},
+    });
+  }, [dispatch]);
 
   return (
     <div className="registration-container">
@@ -58,7 +61,11 @@ const Login: React.FC = () => {
       <div className="form-section">
         <div className="form-header">
           <div className="logo">
-            <span className="logo-icon"></span>
+            <img
+              src={logo}
+              alt="Registration illustration"
+              className="illustration-image"
+            />
             <span className="logo-text">SIMS PPOB</span>
           </div>
           <h1 className="form-title">Masuk atau buat akun untuk memulai</h1>
@@ -87,7 +94,7 @@ const Login: React.FC = () => {
             Masuk
           </button>
           <p className="login-link">
-            belum punya akun? registrasi <a href="/">di sini</a>
+            belum punya akun? registrasi <a href="/register">di sini</a>
           </p>
           <text className={`error-message ${loginError ? "visible" : ""}`}>
             {loginError}
@@ -98,8 +105,8 @@ const Login: React.FC = () => {
       {/* Right Section - Illustration */}
       <div className="illustration-section">
         <img
-          src=""
-          alt="Registration illustration"
+          src={illustrasiLogin}
+          alt="Login illustration"
           className="illustration-image"
         />
       </div>

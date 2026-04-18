@@ -144,11 +144,15 @@ body {
 }
 
 .error-message {
-  color: #e74c3c;
   font-size: 12px;
+  color: #e74c3c;
   margin-top: -10px;
   margin-bottom: 10px;
   visibility: hidden;
+}
+.center {
+  text-align: center;
+  font-size: 14px;
 }
 .error-message.visible {
   visibility: visible !important;

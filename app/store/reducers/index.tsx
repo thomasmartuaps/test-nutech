@@ -7,6 +7,7 @@ import { transactionReducer } from "./transaction";
 interface UsersState {
   profile: ProfileData | null;
   isLoading: boolean;
+  isRegistrationSuccess: boolean;
   regisErrorMessage: string;
   loginErrorMessage: string;
   profileErrorMessage: string;
@@ -15,6 +16,7 @@ interface UsersState {
 const initUsersState: UsersState = {
   profile: null,
   isLoading: false,
+  isRegistrationSuccess: false,
   regisErrorMessage: "",
   loginErrorMessage: "",
   profileErrorMessage: "",
@@ -27,6 +29,16 @@ export function userReducer(state = initUsersState, action: UserAction) {
       return {
         ...state,
         isLoading: true,
+      };
+    case "REGISTRATION_SUCCESS":
+      return {
+        ...state,
+        isRegistrationSuccess: true,
+      };
+    case "CLEAR_REGIS_SUCCESS":
+      return {
+        ...state,
+        isRegistrationSuccess: false,
       };
     case "SET_PROFILE":
       console.log("Setting profile in reducer with payload:", payload);

@@ -36,6 +36,8 @@ export type UserAction =
         profile: ProfileData;
       };
     }
+  | { type: "REGISTRATION_SUCCESS"; payload: {} }
+  | { type: "CLEAR_REGISTRATION_SUCCESS"; payload: {} }
   | { type: "SET_REGIS_ERROR"; payload: { error: string } }
   | { type: "CLEAR_REGIS_ERROR"; payload: {} }
   | { type: "SET_LOGIN_ERROR"; payload: { error: string } }

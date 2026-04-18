@@ -20,6 +20,10 @@ function* registrationSaga(action: UserAction) {
       return;
     }
     yield put({
+      type: "REGISTRATION_SUCCESS",
+      payload: {},
+    });
+    yield put({
       type: "CLEAR_REGIS_ERROR",
       payload: {},
     });

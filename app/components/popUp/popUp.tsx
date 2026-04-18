@@ -7,7 +7,7 @@ interface PopUpProps {
   onClose: () => void;
   amount: string;
   mode: "success" | "error" | "confirmation";
-  menuName: "topup" | "transaction";
+  menuName: "topup" | "transaction" | "registration";
   serviceName?: string;
   onConfirm?: () => void;
 }
@@ -53,7 +53,7 @@ const PopUp = ({
             <h2 className="popup-title">
               {mode === "confirmation" && menuName === "topup"
                 ? `Anda yakin untuk top up sebesar`
-                : menuName === "transaction"
+                : mode === "confirmation" && menuName === "transaction"
                   ? `Beli ${serviceName} sebesar`
                   : null}
               {mode !== "confirmation" && menuName === "topup"
@@ -61,16 +61,21 @@ const PopUp = ({
                 : menuName === "transaction"
                   ? `Transaksi ${serviceName} sebesar`
                   : null}
+              {menuName === "registration" ? "registrasi sukses" : null}
             </h2>
 
-            <p className="popup-amount">{`Rp${new Intl.NumberFormat(
-              "de-DE",
-            ).format(parseInt(amount))}`}</p>
-            {mode !== "confirmation" && (
-              <p className="popup-message">
-                {mode === "success" ? "berhasil!" : "gagal"}
-              </p>
-            )}
+            {menuName !== "registration" ? (
+              <div>
+                <p className="popup-amount">{`Rp${new Intl.NumberFormat(
+                  "de-DE",
+                ).format(parseInt(amount))}`}</p>
+                {mode !== "confirmation" && (
+                  <p className="popup-message">
+                    {mode === "success" ? "berhasil!" : "gagal"}
+                  </p>
+                )}
+              </div>
+            ) : null}
           </div>
 
           {/* Footer Link */}
@@ -89,6 +94,11 @@ const PopUp = ({
                 Kembali ke Beranda
               </a>
             )}
+            {menuName === "registration" ? (
+              <a href="/login" className="popup-link">
+                Menuju ke login
+              </a>
+            ) : null}
           </div>
         </DialogPanel>
       </div>

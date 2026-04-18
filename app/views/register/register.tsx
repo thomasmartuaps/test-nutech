@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./register.css";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { useNavigate } from "react-router";
+import illustrasiLogin from "~/assets/illustrasi-login.png";
+import logo from "~/assets/logo.png";
+import PopUp from "~/components/popUp/popUp";
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +14,7 @@ const Register: React.FC = () => {
     password: "",
   });
   const [confirmPassword, setConfirmPassword] = useState(false);
+  const [successPopupOpen, setSuccessPopupOpen] = useState(false);
 
   const [firstNameEmpty, setFirstNameEmpty] = useState(false);
   const [lastNameEmpty, setLastNameEmpty] = useState(false);
@@ -21,53 +25,91 @@ const Register: React.FC = () => {
   );
 
   const dispatch = useAppDispatch();
+  const { isRegistrationSuccess } = useAppSelector((state) => state.users);
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const id = e.target.id;
     // Submit the form data to the server or perform any actions needed
+    if (e.target.id === "first_name") setFirstNameEmpty(false);
+    if (e.target.id === "last_name") setLastNameEmpty(false);
+    if (e.target.id === "email") setEmailEmpty(false);
+    if (e.target.id === "password") setPasswordEmpty(false);
     setFormData({
       ...formData,
       [id]: e.target.value ?? "",
     });
-    console.log(formData);
   };
   const handleConfirmPasswordChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     e.preventDefault();
-    setConfirmPassword(e.target.value === formData.password);
+    const confirmPass = e.target.value === formData.password;
+    setConfirmPassword(confirmPass);
   };
-  const handleSubmit = (e: React.SubmitEvent<HTMLButtonElement>) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    console.log(formData, "FORM DATA");
+    let isError = false;
     if (!formData.first_name) {
       setFirstNameEmpty(true);
+      isError = true;
     }
     if (!formData.last_name) {
       setLastNameEmpty(true);
+      isError = true;
     }
     if (!formData.email) {
       setEmailEmpty(true);
+      isError = true;
     }
     if (!formData.password) {
       setPasswordEmpty(true);
+      isError = true;
     }
+    console.log(isError, "IS ERROR");
     if (!confirmPassword) {
       return;
     }
+    if (isError) {
+      return;
+    }
+    dispatch({
+      type: "CLEAR_REGIS_ERROR",
+      payload: { data: formData },
+    });
     dispatch({
       type: "REGISTRATION",
       payload: { data: formData },
     });
   };
+
+  const handlePopUpClose = () => {
+    setSuccessPopupOpen(false);
+    dispatch({
+      type: "CLEAR_REGISTRATION_SUCCESS",
+      payload: {},
+    });
+  };
+
+  useEffect(() => {
+    if (isRegistrationSuccess) {
+      setSuccessPopupOpen(true);
+    }
+  }, [isRegistrationSuccess, setSuccessPopupOpen]);
+
   return (
     <div className="registration-container">
       {/* Left Section - Form */}
       <div className="form-section">
         <div className="form-header">
           <div className="logo">
-            <span className="logo-icon"></span>
+            <img
+              src={logo}
+              alt="Registration illustration"
+              className="illustration-image"
+            />
             <span className="logo-text">SIMS PPOB</span>
           </div>
           <h1 className="form-title">Lengkapi data untuk membuat akun</h1>
@@ -76,13 +118,11 @@ const Register: React.FC = () => {
         <form className="form">
           <input
             type="email"
+            id="email"
             placeholder="masukkan email anda"
             className={`form-input ${emailEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${emailEmpty ? "visible" : ""}`}>
-            email tidak boleh kosong
-          </text>
           <input
             type="text"
             id="first_name"
@@ -90,9 +130,6 @@ const Register: React.FC = () => {
             className={`form-input ${firstNameEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${firstNameEmpty ? "visible" : ""}`}>
-            nama depan tidak boleh kosong
-          </text>
           <input
             type="text"
             id="last_name"
@@ -100,18 +137,13 @@ const Register: React.FC = () => {
             className={`form-input ${lastNameEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${lastNameEmpty ? "visible" : ""}`}>
-            nama belakang tidak boleh kosong
-          </text>
           <input
             type="password"
+            id="password"
             placeholder="buat password"
             className={`form-input ${passwordEmpty ? "input-error" : ""}`}
             onChange={handleInputChange}
           />
-          <text className={`error-message ${passwordEmpty ? "visible" : ""}`}>
-            password tidak boleh kosong
-          </text>
           <input
             type="password"
             placeholder="konfirmasi password"
@@ -122,28 +154,36 @@ const Register: React.FC = () => {
             password tidak sama
           </text>
           <button
-            type="submit"
-            className="submit-button"
-            onSubmit={handleSubmit}
+            type="button"
+            className={`submit-button ${!confirmPassword} ? "disabled" : ""`}
+            onClick={handleSubmit}
             disabled={!confirmPassword}
           >
             Daftar
           </button>
-          <p className="login-link">
-            sudah punya akun? login <a href="/login">di sini</a>
-          </p>
           <text
-            className={`error-message ${registrationError ? "visible" : ""}`}
+            className={`error-message center ${registrationError ? "visible" : ""}`}
           >
             {registrationError}
           </text>
+          <p className="login-link">
+            sudah punya akun? login <a href="/login">di sini</a>
+          </p>
         </form>
       </div>
+
+      <PopUp
+        isOpen={successPopupOpen}
+        onClose={handlePopUpClose}
+        amount={""}
+        mode={isRegistrationSuccess ? "success" : "error"}
+        menuName={"registration"}
+      />
 
       {/* Right Section - Illustration */}
       <div className="illustration-section">
         <img
-          src=""
+          src={illustrasiLogin}
           alt="Registration illustration"
           className="illustration-image"
         />

@@ -92,8 +92,22 @@
   margin-top: 10px;
 }
 
+.submit-button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .submit-button:hover {
   background-color: #e62e2e;
+}
+
+.submit-button:hover:not(.disabled) {
+  background-color: #e63128;
+}
+
+.submit-button:active:not(.disabled) {
+  background-color: #cc2818;
 }
 
 .login-link {
