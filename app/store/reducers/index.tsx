@@ -3,6 +3,7 @@ import type { ModuleAction, UserAction } from "../actions";
 import type { Banner, ProfileData, Service } from "~/types";
 import { transactionReducer } from "./transaction";
 import { uploadProfilePicture } from "~/api";
+import { informationReducer } from "./information";
 
 interface UsersState {
   profile: ProfileData | null;
@@ -11,6 +12,7 @@ interface UsersState {
   regisErrorMessage: string;
   loginErrorMessage: string;
   profileErrorMessage: string;
+  editProfileSuccessMessage: string;
   editProfileErrorMessage: string;
   uploadPictureErrorMessage: string;
   uploadPictureSuccessMessage: string;
@@ -23,6 +25,7 @@ const initUsersState: UsersState = {
   regisErrorMessage: "",
   loginErrorMessage: "",
   profileErrorMessage: "",
+  editProfileSuccessMessage: "",
   editProfileErrorMessage: "",
   uploadPictureErrorMessage: "",
   uploadPictureSuccessMessage: "",
@@ -88,12 +91,23 @@ export function userReducer(state = initUsersState, action: UserAction) {
     case "EDIT_USER":
       return {
         ...state,
-        profile: payload.user,
+        editProfileErrorMessage: "",
+      };
+    case "EDIT_USER_SUCCESS":
+      return {
+        ...state,
+        editProfileSuccessMessage: payload.message,
       };
     case "EDIT_USER_ERROR":
       return {
         ...state,
         editProfileErrorMessage: payload.error,
+      };
+    case "CLEAR_EDIT_MESSAGES":
+      return {
+        ...state,
+        editProfileSuccessMessage: "",
+        editProfileErrorMessage: "",
       };
     case "UPLOAD_PICTURE_SUCCESS":
       return {
@@ -120,43 +134,8 @@ export function userReducer(state = initUsersState, action: UserAction) {
   }
 }
 
-interface ModuleState {
-  banners: Banner[];
-  services: Service[];
-  activeService: Service | null;
-}
-
-const initModuleState: ModuleState = {
-  banners: [],
-  services: [],
-  activeService: null,
-};
-
-export function moduleReducer(state = initModuleState, action: ModuleAction) {
-  const { type, payload } = action;
-  switch (type) {
-    case "SET_BANNERS":
-      return {
-        ...state,
-        banners: payload.banners,
-      };
-    case "SET_SERVICES":
-      return {
-        ...state,
-        services: payload.services,
-      };
-    case "SET_ACTIVE_SERVICE":
-      return {
-        ...state,
-        activeService: payload.service,
-      };
-    default:
-      return state;
-  }
-}
-
 export const rootReducer = combineReducers({
   users: userReducer,
-  information: moduleReducer,
+  information: informationReducer,
   transactions: transactionReducer,
 });

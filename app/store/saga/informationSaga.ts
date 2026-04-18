@@ -55,7 +55,7 @@ function* serviceSaga(action: ModuleAction) {
   }
 }
 
-export function* moduleSagaWatcher() {
+export function* informationSagaWatcher() {
   yield takeEvery("FETCH_BANNERS", bannerSaga);
   yield takeEvery("FETCH_SERVICES", serviceSaga);
 }

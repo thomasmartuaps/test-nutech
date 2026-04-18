@@ -2,7 +2,13 @@ import { all, call, put, takeEvery } from "redux-saga/effects";
 import type { ProfileData, ResponseData } from "~/types";
 import token from "~/utils/token";
 import type { UserAction } from "../actions";
-import { getProfile, login, registration, uploadProfilePicture } from "~/api";
+import {
+  editProfile,
+  getProfile,
+  login,
+  registration,
+  uploadProfilePicture,
+} from "~/api";
 
 function* registrationSaga(action: UserAction) {
   if (action.type !== "REGISTRATION") {
@@ -164,6 +170,46 @@ function* editProfilePictureSaga(action: UserAction) {
   }
 }
 
+function* editProfileSaga(action: UserAction) {
+  if (action.type !== "EDIT_USER") {
+    return;
+  }
+  try {
+    const tokenValue = token.get();
+    if (!tokenValue) {
+      console.error("No token found. User might not be logged in.");
+      throw new Error("No token found. User might not be logged in.");
+    }
+    const res: ResponseData<ProfileData> = yield call(editProfile, {
+      token: tokenValue,
+      first_name: action.payload.user.first_name,
+      last_name: action.payload.user.last_name,
+    });
+    console.log(res.message, "THIS IS SUCCESS");
+    yield put({
+      type: "EDIT_USER_SUCCESS",
+      payload: { message: res.message },
+    });
+    yield put({
+      type: "FETCH_PROFILE",
+      payload: {},
+    });
+  } catch (error: any) {
+    if (error.response.data.status === 102) {
+      yield put({
+        type: "EDIT_USER_ERROR",
+        payload: { error: error.response.data.message },
+      });
+      return;
+    }
+    if (error.response.data.status === 108) {
+      token.remove();
+      return;
+    }
+    console.error("Error occurred while editing user profile:", error);
+  }
+}
+
 export function* userSagaWatcher() {
   yield all([
     takeEvery("REGISTRATION", registrationSaga),
@@ -171,5 +217,6 @@ export function* userSagaWatcher() {
     takeEvery("FETCH_PROFILE", fetchProfileSaga),
     takeEvery("LOGOUT", logoutSaga),
     takeEvery("UPLOAD_PICTURE", editProfilePictureSaga),
+    takeEvery("EDIT_USER", editProfileSaga),
   ]);
 }

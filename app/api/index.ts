@@ -171,3 +171,25 @@ export async function uploadProfilePicture({
 
   return res.data;
 }
+
+export async function editProfile({
+  first_name,
+  last_name,
+  token,
+}: {
+  first_name: string;
+  last_name: string;
+  token: string;
+}) {
+  const res: { data: ResponseData<ProfileData> } = await axios.put(
+    `${API_BASE_URL}/profile/update`,
+    { first_name, last_name },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+}

@@ -31,10 +31,10 @@ const Register: React.FC = () => {
     e.preventDefault();
     const id = e.target.id;
     // Submit the form data to the server or perform any actions needed
-    if (e.target.id === "first_name") setFirstNameEmpty(false);
-    if (e.target.id === "last_name") setLastNameEmpty(false);
-    if (e.target.id === "email") setEmailEmpty(false);
-    if (e.target.id === "password") setPasswordEmpty(false);
+    if (id === "first_name") setFirstNameEmpty(false);
+    if (id === "last_name") setLastNameEmpty(false);
+    if (id === "email") setEmailEmpty(false);
+    if (id === "password") setPasswordEmpty(false);
     setFormData({
       ...formData,
       [id]: e.target.value ?? "",

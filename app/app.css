@@ -150,11 +150,23 @@ body {
   margin-bottom: 10px;
   visibility: hidden;
 }
+
+.success-message {
+  font-size: 12px;
+  color: #0fd884;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  visibility: hidden;
+}
+
 .center {
   text-align: center;
   font-size: 14px;
 }
 .error-message.visible {
+  visibility: visible !important;
+}
+.success-message.visible {
   visibility: visible !important;
 }
 

@@ -1,10 +1,14 @@
 import { all } from "redux-saga/effects";
 import { userSagaWatcher } from "./userSaga";
-import { moduleSagaWatcher } from "./modulesaga";
+import { informationSagaWatcher } from "./informationSaga";
 import { transactionSagaWatcher } from "./transactionSaga";
 
 function* rootSaga() {
-  yield all([userSagaWatcher(), moduleSagaWatcher(), transactionSagaWatcher()]);
+  yield all([
+    userSagaWatcher(),
+    informationSagaWatcher(),
+    transactionSagaWatcher(),
+  ]);
 }
 
 export default rootSaga;

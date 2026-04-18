@@ -77,7 +77,19 @@ export type UserAction =
       payload: {};
     }
   | {
+      type: "EDIT_USER_SUCCESS";
+      payload: {
+        message: string;
+      };
+    }
+  | {
       type: "EDIT_USER_ERROR";
+      payload: {
+        error: string;
+      };
+    }
+  | {
+      type: "CLEAR_EDIT_MESSAGES";
       payload: {
         error: string;
       };

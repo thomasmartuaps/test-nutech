@@ -11,6 +11,7 @@ const EditProfile: React.FC = () => {
   const {
     profile: userProfile,
     editProfileErrorMessage,
+    editProfileSuccessMessage,
     uploadPictureErrorMessage,
     uploadPictureSuccessMessage,
   } = useAppSelector((state) => state.users);
@@ -24,7 +25,6 @@ const EditProfile: React.FC = () => {
 
   const [isEditable, setIsEditable] = useState(false);
   const [formData, setFormData] = useState({
-    email,
     firstName,
     lastName,
   });
@@ -37,18 +37,33 @@ const EditProfile: React.FC = () => {
       : defaultProfilePic;
 
   const handleEditToggle = () => {
-    setIsEditable(!isEditable);
     if (isEditable) {
-      setFormData({ email, firstName, lastName });
+      // only request to API here, changing the button happens later after the request is successful
+      dispatch({
+        type: "EDIT_USER",
+        payload: {
+          user: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+          },
+        },
+      });
+    } else {
+      // clear the error and success messages before changing the button
+      dispatch({
+        type: "CLEAR_EDIT_MESSAGES",
+        payload: {},
+      });
+      setIsEditable(!isEditable);
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
+    setFormData({
+      ...formData,
       [name]: value,
-    }));
+    });
   };
 
   const handleProfilePictureClick = () => {
@@ -62,10 +77,6 @@ const EditProfile: React.FC = () => {
         alert("ukuran file max 100kb");
         return;
       }
-      // const reader = new FileReader();
-      // reader.onload = (event) => {
-      //   const binaryString = event.target?.result as string;
-      //   setProfileImage(binaryString);
       const formData = new FormData();
       formData.append("file", file);
       dispatch({
@@ -74,8 +85,6 @@ const EditProfile: React.FC = () => {
           image: formData,
         },
       });
-      // };
-      // reader.readAsDataURL(file);
     }
   };
 
@@ -104,6 +113,12 @@ const EditProfile: React.FC = () => {
     uploadPictureSuccessMessage,
     setProfPicPopupOpen,
   ]);
+
+  useEffect(() => {
+    if (editProfileSuccessMessage) {
+      setIsEditable(false); // Change button after edit user is confirmed success from API
+    }
+  });
 
   return (
     <Dashboard selectedMenu="account">
@@ -136,7 +151,7 @@ const EditProfile: React.FC = () => {
 
         {/* User Name */}
         <h1 className="profile-name">
-          {formData.firstName} {formData.lastName}
+          {firstName} {lastName}
         </h1>
 
         {/* Form Section */}
@@ -149,7 +164,7 @@ const EditProfile: React.FC = () => {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={email}
                 onChange={handleInputChange}
                 readOnly={true}
                 className={`form-input read-only`}
@@ -207,6 +222,22 @@ const EditProfile: React.FC = () => {
             >
               Logout
             </button>
+          ) : null}
+
+          {/* Success & Error Message */}
+          {editProfileSuccessMessage ? (
+            <text
+              className={`success-message center ${editProfileSuccessMessage ? "visible" : ""}`}
+            >
+              {"Sukses mengubah informasi profile"}
+            </text>
+          ) : null}
+          {editProfileErrorMessage ? (
+            <text
+              className={`error-message center ${editProfileErrorMessage ? "visible" : ""}`}
+            >
+              {`Gagal menyimpan: ${editProfileErrorMessage}`}
+            </text>
           ) : null}
         </form>
       </div>
