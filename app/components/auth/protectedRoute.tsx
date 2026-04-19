@@ -22,7 +22,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }, [tokenValue, navigate]);
 
   useEffect(() => {
-    console.log(userProfile, "IS IT EVER EMPTY");
     if (tokenValue && !userProfile) {
       dispatch({
         type: "FETCH_PROFILE",
