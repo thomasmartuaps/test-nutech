@@ -3,6 +3,7 @@ import "./loginForm.css";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import illustrasiLogin from "~/assets/illustrasi-login.png";
 import logo from "~/assets/logo.png";
+import lock from "~/assets/lock.svg";
 import { Link } from "react-router";
 
 const Login: React.FC = () => {
@@ -53,6 +54,10 @@ const Login: React.FC = () => {
       type: "CLEAR_REGISTRATION_SUCCESS",
       payload: {},
     });
+    dispatch({
+      type: "CLEAR_LOGIN_ERROR",
+      payload: {},
+    });
   }, [dispatch]);
 
   return (
@@ -72,20 +77,33 @@ const Login: React.FC = () => {
         </div>
 
         <form className="form">
-          <input
-            type="email"
-            id="email"
-            placeholder="masukkan email anda"
-            className={`${emailEmpty ? "input-error" : ""} form-input`}
-            onChange={handleInputChange}
-          />
-          <input
-            type="password"
-            id="password"
-            placeholder="masukkan password anda"
-            className={`${passwordEmpty ? "input-error" : ""} form-input`}
-            onChange={handleInputChange}
-          />
+          <div
+            className={`form-input-wrapper ${emailEmpty ? "input-error" : ""}`}
+          >
+            <span className="input-icon">@</span>
+            <input
+              type="email"
+              id="email"
+              placeholder="masukkan email anda"
+              className={`form-input`}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div
+            className={`form-input-wrapper ${passwordEmpty ? "input-error" : ""}`}
+          >
+            <span className="input-icon">
+              <img src={lock} />
+            </span>
+            <input
+              type="password"
+              id="password"
+              placeholder="masukkan password anda"
+              className={`form-input`}
+              onChange={handleInputChange}
+            />
+            <span className="input-icon">👁</span>
+          </div>
           <button
             type="submit"
             className="submit-button"
@@ -96,7 +114,9 @@ const Login: React.FC = () => {
           <p className="login-link">
             belum punya akun? registrasi <Link to="/register">di sini</Link>
           </p>
-          <text className={`error-message ${loginError ? "visible" : ""}`}>
+          <text
+            className={`error-message center ${loginError ? "visible" : ""}`}
+          >
             {loginError}
           </text>
         </form>

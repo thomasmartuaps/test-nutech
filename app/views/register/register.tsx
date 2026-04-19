@@ -3,6 +3,8 @@ import "./register.css";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import illustrasiLogin from "~/assets/illustrasi-login.png";
 import logo from "~/assets/logo.png";
+import lock from "~/assets/lock.svg";
+import lockError from "~/assets/lock_error.svg";
 import PopUp from "~/components/popUp/popUp";
 import { Link } from "react-router";
 
@@ -105,6 +107,9 @@ const Register: React.FC = () => {
     }
   }, [isRegistrationSuccess, setSuccessPopupOpen]);
 
+  const confirmPassInputError =
+    confirmPassword || (!confirmPassword && confirmPassInput.length === 0);
+
   return (
     <div className="registration-container">
       {/* Left Section - Form */}
@@ -122,48 +127,84 @@ const Register: React.FC = () => {
         </div>
 
         <form className="form">
-          <input
-            type="email"
-            id="email"
-            placeholder="masukkan email anda"
-            className={`form-input ${emailEmpty ? "input-error" : ""}`}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            id="first_name"
-            placeholder="nama depan"
-            className={`form-input ${firstNameEmpty ? "input-error" : ""}`}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            id="last_name"
-            placeholder="nama belakang"
-            className={`form-input ${lastNameEmpty ? "input-error" : ""}`}
-            onChange={handleInputChange}
-          />
-          <input
-            type="password"
-            id="password"
-            placeholder="buat password"
-            className={`form-input ${passwordEmpty ? "input-error" : ""}`}
-            onChange={handleInputChange}
-          />
-          <input
-            type="password"
-            placeholder="konfirmasi password"
-            className={`form-input ${confirmPassword || (!confirmPassword && confirmPassInput.length === 0) ? "" : "input-error"}`}
-            onChange={handleConfirmPasswordChange}
-          />
+          <div
+            className={`form-input-wrapper ${emailEmpty ? "input-error" : ""}`}
+          >
+            <span className="input-icon">@</span>
+            <input
+              type="email"
+              id="email"
+              placeholder="masukkan email anda"
+              className={`form-input`}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div
+            className={`form-input-wrapper ${firstNameEmpty ? "input-error" : ""}`}
+          >
+            <span className="input-icon">👤</span>
+            <input
+              type="text"
+              id="first_name"
+              placeholder="nama depan"
+              className={`form-input`}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div
+            className={`form-input-wrapper ${lastNameEmpty ? "input-error" : ""}`}
+          >
+            <span className="input-icon">👤</span>
+            <input
+              type="text"
+              id="last_name"
+              placeholder="nama belakang"
+              className={`form-input`}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div
+            className={`form-input-wrapper ${passwordEmpty ? "input-error" : ""}`}
+          >
+            <span className="input-icon">
+              <img src={lock} />
+            </span>
+
+            <input
+              type="password"
+              id="password"
+              placeholder="buat password"
+              className={`form-input`}
+              onChange={handleInputChange}
+            />
+            <span className="input-icon">👁</span>
+          </div>
+          <div
+            className={`form-input-wrapper ${confirmPassInputError ? "" : "input-error"}`}
+          >
+            <span className="input-icon">
+              {confirmPassInputError ? (
+                <img src={lock} />
+              ) : (
+                <img src={lockError} />
+              )}
+            </span>
+            <input
+              type="password"
+              placeholder="konfirmasi password"
+              className={`form-input `}
+              onChange={handleConfirmPasswordChange}
+            />
+            <span className="input-icon">👁</span>
+          </div>
           <text
-            className={`error-message ${confirmPassword || (!confirmPassword && confirmPassInput.length === 0) ? "" : "visible"}`}
+            className={`error-message ${confirmPassInputError ? "" : "visible"}`}
           >
             password tidak sama
           </text>
           <button
             type="button"
-            className={`submit-button ${!confirmPassword} ? "disabled" : ""`}
+            className={`submit-button ${confirmPassInputError ? "" : "disabled"}`}
             onClick={handleSubmit}
             disabled={!confirmPassword}
           >
