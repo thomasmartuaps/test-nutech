@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import illustrasiLogin from "~/assets/illustrasi-login.png";
 import logo from "~/assets/logo.png";
 import PopUp from "~/components/popUp/popUp";
+import { Link } from "react-router";
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -174,7 +175,7 @@ const Register: React.FC = () => {
             {registrationError}
           </text>
           <p className="login-link">
-            sudah punya akun? login <a href="/login">di sini</a>
+            sudah punya akun? login <Link to="/login">di sini</Link>
           </p>
         </form>
       </div>

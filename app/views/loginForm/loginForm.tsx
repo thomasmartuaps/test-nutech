@@ -3,6 +3,7 @@ import "./loginForm.css";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import illustrasiLogin from "~/assets/illustrasi-login.png";
 import logo from "~/assets/logo.png";
+import { Link } from "react-router";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -93,7 +94,7 @@ const Login: React.FC = () => {
             Masuk
           </button>
           <p className="login-link">
-            belum punya akun? registrasi <a href="/register">di sini</a>
+            belum punya akun? registrasi <Link to="/register">di sini</Link>
           </p>
           <text className={`error-message ${loginError ? "visible" : ""}`}>
             {loginError}

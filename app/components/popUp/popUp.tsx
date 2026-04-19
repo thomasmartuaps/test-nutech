@@ -1,6 +1,7 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import "./popUp.css";
 import logo from "~/assets/logo.png";
+import { Link } from "react-router";
 
 interface PopUpProps {
   isOpen: boolean;
@@ -81,9 +82,9 @@ const PopUp = ({
           {/* Footer Link */}
           <div className="popup-footer">
             {menuName === "registration" ? (
-              <a href="/login" className="popup-link">
+              <Link to="/login" className="popup-link">
                 Menuju ke login
-              </a>
+              </Link>
             ) : mode === "confirmation" ? (
               <>
                 <button className="popup-link confirm" onClick={handleConfirm}>
@@ -94,9 +95,9 @@ const PopUp = ({
                 </button>
               </>
             ) : (
-              <a href="/" className="popup-link">
+              <Link to="/" className="popup-link">
                 Kembali ke Beranda
-              </a>
+              </Link>
             )}
           </div>
         </DialogPanel>

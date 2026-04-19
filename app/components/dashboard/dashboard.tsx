@@ -4,6 +4,7 @@ import defaultProfilePic from "~/assets/default-profile.png";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { NULL_PROFILE_PIC } from "~/utils/enum";
 import logo from "~/assets/logo.png";
+import { Link } from "react-router";
 
 interface DashboardProps {
   children: React.ReactNode;
@@ -45,31 +46,31 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
       {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-container">
-          <a href="/" className="navbar-logo">
+          <Link to="/" className="navbar-logo">
             <span className="logo-icon">
               <img src={logo} alt={"SIMS PPOB"} />
             </span>
             <span className="logo-text">SIMS PPOB</span>
-          </a>
+          </Link>
           <div className="navbar-menu">
-            <a
-              href="/top-up"
+            <Link
+              to="/top-up"
               className={selectedMenu === "top-up" ? "active" : ""}
             >
               Top Up
-            </a>
-            <a
-              href="/transaction-list"
+            </Link>
+            <Link
+              to="/transaction-list"
               className={selectedMenu === "transaction" ? "active" : ""}
             >
               Transaction
-            </a>
-            <a
-              href="/account"
+            </Link>
+            <Link
+              to="/account"
               className={selectedMenu === "account" ? "active" : ""}
             >
               Akun
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
@@ -107,13 +108,12 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
               ) : (
                 <h3 className="balance-amount">Rp • • • • • • •</h3>
               )}
-              <a
-                href="#"
+              <button
                 className="lihat-saldo"
                 onClick={() => setSaldoVisible(!saldoVisible)}
               >
                 Lihat Saldo 👁
-              </a>
+              </button>
             </div>
           </section>
         ) : null}
