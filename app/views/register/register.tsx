@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import illustrasiLogin from "~/assets/illustrasi-login.png";
 import logo from "~/assets/logo.png";
 import lock from "~/assets/lock.svg";
+import person from "~/assets/person.svg";
 import lockError from "~/assets/lock_error.svg";
 import PopUp from "~/components/popUp/popUp";
 import { Link } from "react-router";
@@ -142,7 +143,9 @@ const Register: React.FC = () => {
           <div
             className={`form-input-wrapper ${firstNameEmpty ? "input-error" : ""}`}
           >
-            <span className="input-icon">👤</span>
+            <span className="input-icon">
+              <img src={person} />
+            </span>
             <input
               type="text"
               id="first_name"
@@ -154,7 +157,9 @@ const Register: React.FC = () => {
           <div
             className={`form-input-wrapper ${lastNameEmpty ? "input-error" : ""}`}
           >
-            <span className="input-icon">👤</span>
+            <span className="input-icon">
+              <img src={person} />
+            </span>
             <input
               type="text"
               id="last_name"

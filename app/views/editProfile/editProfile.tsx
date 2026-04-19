@@ -5,6 +5,7 @@ import "./editProfile.css";
 import Dashboard from "~/components/dashboard/dashboard";
 import { NULL_PROFILE_PIC } from "~/utils/enum";
 import GenericPopUp from "~/components/genericPopUp/genericPopUp";
+import person from "~/assets/person.svg";
 
 const EditProfile: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -176,7 +177,9 @@ const EditProfile: React.FC = () => {
           <div className="form-group">
             <label className="form-label">Nama Depan</label>
             <div className="form-input-wrapper">
-              <span className="input-icon">👤</span>
+              <span className="input-icon">
+                <img src={person} />
+              </span>
               <input
                 type="text"
                 name="firstName"
@@ -192,7 +195,9 @@ const EditProfile: React.FC = () => {
           <div className="form-group">
             <label className="form-label">Nama Belakang</label>
             <div className="form-input-wrapper">
-              <span className="input-icon">👤</span>
+              <span className="input-icon">
+                <img src={person} />
+              </span>
               <input
                 type="text"
                 name="lastName"
