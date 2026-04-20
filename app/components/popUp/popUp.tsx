@@ -82,7 +82,7 @@ const PopUp = ({
           {/* Footer Link */}
           <div className="popup-footer">
             {menuName === "registration" ? (
-              <Link to="/login" className="popup-link">
+              <Link to="/login" className="popup-link" onClick={onClose}>
                 Menuju ke login
               </Link>
             ) : mode === "confirmation" ? (
@@ -95,7 +95,7 @@ const PopUp = ({
                 </button>
               </>
             ) : (
-              <Link to="/" className="popup-link">
+              <Link to="/" className="popup-link" onClick={onClose}>
                 Kembali ke Beranda
               </Link>
             )}
