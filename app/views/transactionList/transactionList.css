@@ -71,6 +71,12 @@
   font-weight: 500;
 }
 
+.no-transactions {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
 /* Show More Section */
 .show-more-container {
   display: flex;

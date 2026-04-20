@@ -6,30 +6,29 @@ import { useAppDispatch, useAppSelector } from "~/store/hooks";
 const limit = 5; // Number of transactions to fetch per page
 
 const TopUp = () => {
-  const transactionList = useAppSelector(
-    (state) => state.transactions.transactions,
-  );
-
-  const [offset, setOffset] = useState(0);
-
+  const {
+    isFetched,
+    transactions: transactionList,
+    currentOffset,
+  } = useAppSelector((state) => state.transactions);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     // Fetch transactions from the server or use mock data
-    dispatch({
-      type: "FETCH_TRANSACTIONS",
-      payload: {
-        offset,
-        limit,
-      },
-    });
-  }, [dispatch]);
+    if (!isFetched) {
+      dispatch({
+        type: "FETCH_TRANSACTIONS",
+        payload: {
+          limit,
+        },
+      });
+    }
+  }, [dispatch, isFetched]);
 
   const handleShowMore = () => {
-    const newOffset = offset + limit;
-    setOffset(newOffset);
+    const newOffset = currentOffset + limit;
     dispatch({
-      type: "FETCH_TRANSACTIONS",
+      type: "FETCH_MORE_TRANSACTIONS",
       payload: {
         offset: newOffset,
         limit,
@@ -75,15 +74,19 @@ const TopUp = () => {
               </div>
             ))
           ) : (
-            <p className="no-transactions">Belum ada transaksi.</p>
+            <p className="no-transactions center">
+              Maaf tidak ada histori transaksi untuk saat ini.
+            </p>
           )}
         </div>
 
-        <div className="show-more-container">
-          <button onClick={handleShowMore} className="show-more-button">
-            Show more
-          </button>
-        </div>
+        {transactionList.length > 0 ? (
+          <div className="show-more-container">
+            <button onClick={handleShowMore} className="show-more-button">
+              Show more
+            </button>
+          </div>
+        ) : null}
       </div>
     </Dashboard>
   );

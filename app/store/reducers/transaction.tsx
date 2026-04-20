@@ -3,6 +3,8 @@ import type { TransactionAction } from "../actions";
 
 interface TransactionState {
   balance: string;
+  currentOffset: number;
+  isFetched: boolean;
   isTopUpSuccess: boolean;
   isTransactionSuccess: boolean;
   topUpErrorMessage: string;
@@ -12,6 +14,8 @@ interface TransactionState {
 
 const initTransactionState: TransactionState = {
   balance: "",
+  currentOffset: 0,
+  isFetched: false,
   isTopUpSuccess: false,
   isTransactionSuccess: false,
   topUpErrorMessage: "",
@@ -35,8 +39,18 @@ export function transactionReducer(
       return { ...state, topUpErrorMessage: payload.error };
     case "CLEAR_TOP_UP_ERROR":
       return { ...state, topUpErrorMessage: "" };
+    case "FETCH_MORE_TRANSACTIONS":
+      return {
+        ...state,
+        currentOffset: payload.offset,
+      };
     case "SET_TRANSACTIONS":
-      console.log("Setting transactions in reducer with payload:", payload);
+      return {
+        ...state,
+        transactions: [...payload.transactions],
+        isFetched: true,
+      };
+    case "SET_MORE_TRANSACTIONS":
       return {
         ...state,
         transactions: [...state.transactions, ...payload.transactions],

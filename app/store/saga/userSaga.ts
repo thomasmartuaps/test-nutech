@@ -185,7 +185,6 @@ function* editProfileSaga(action: UserAction) {
       first_name: action.payload.user.first_name,
       last_name: action.payload.user.last_name,
     });
-    console.log(res.message, "THIS IS SUCCESS");
     yield put({
       type: "EDIT_USER_SUCCESS",
       payload: { message: res.message },

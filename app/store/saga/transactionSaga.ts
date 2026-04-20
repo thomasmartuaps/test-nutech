@@ -88,6 +88,36 @@ export function* getTransactionsSaga(action: TransactionAction) {
     throw new Error("No token found. User might not be logged in.");
   }
   try {
+    const { limit } = action.payload;
+    const res: ResponseData<{ records: Transaction[] }> = yield call(
+      getTransactions,
+      {
+        token: tokenValue,
+        offset: 0,
+        limit,
+      },
+    );
+    yield put({
+      type: "SET_TRANSACTIONS",
+      payload: {
+        transactions: res.data.records,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+  }
+}
+
+export function* getMoreTransactionsSaga(action: TransactionAction) {
+  if (action.type !== "FETCH_MORE_TRANSACTIONS") {
+    return;
+  }
+  const tokenValue = token.get();
+  if (!tokenValue) {
+    console.error("No token found. User might not be logged in.");
+    throw new Error("No token found. User might not be logged in.");
+  }
+  try {
     const { offset, limit } = action.payload;
     const res: ResponseData<{ records: Transaction[] }> = yield call(
       getTransactions,
@@ -98,7 +128,7 @@ export function* getTransactionsSaga(action: TransactionAction) {
       },
     );
     yield put({
-      type: "SET_TRANSACTIONS",
+      type: "SET_MORE_TRANSACTIONS",
       payload: {
         transactions: res.data.records,
       },
@@ -166,5 +196,6 @@ export function* transactionSagaWatcher() {
     takeEvery("FETCH_TRANSACTIONS", getTransactionsSaga),
     takeEvery("INITIATE_TRANSACTION", transactionPaymentSaga),
     takeEvery("TRANSACTION_SUCCESS", transactionSuccessSaga),
+    takeEvery("FETCH_MORE_TRANSACTIONS", getMoreTransactionsSaga),
   ]);
 }

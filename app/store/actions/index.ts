@@ -161,12 +161,24 @@ export type TransactionAction =
   | {
       type: "FETCH_TRANSACTIONS";
       payload: {
-        offset: number;
         limit: number;
       };
     }
   | {
       type: "SET_TRANSACTIONS";
+      payload: {
+        transactions: Transaction[];
+      };
+    }
+  | {
+      type: "FETCH_MORE_TRANSACTIONS";
+      payload: {
+        offset: number;
+        limit: number;
+      };
+    }
+  | {
+      type: "SET_MORE_TRANSACTIONS";
       payload: {
         transactions: Transaction[];
       };

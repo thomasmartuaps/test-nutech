@@ -31,9 +31,7 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
   }, [dispatch, user]);
 
   useEffect(() => {
-    console.log("Dashboard - balance changed:", balance);
     if (!balance) {
-      console.log("Balance is empty, dispatching GET_BALANCE");
       dispatch({
         type: "GET_BALANCE",
         payload: {},
