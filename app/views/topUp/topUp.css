@@ -115,7 +115,7 @@
 
 .topup-option.active {
   background-color: #ff3b30;
-  color: white;
+  color: white !important;
   border-color: #ff3b30;
 }
 

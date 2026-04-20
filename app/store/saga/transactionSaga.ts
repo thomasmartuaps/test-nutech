@@ -144,6 +144,20 @@ export function* transactionPaymentSaga(action: TransactionAction) {
   }
 }
 
+export function* transactionSuccessSaga(action: TransactionAction) {
+  if (action.type !== "TRANSACTION_SUCCESS") {
+    return;
+  }
+  yield put({
+    type: "GET_BALANCE",
+    payload: {},
+  });
+  yield put({
+    type: "CLEAR_TRANSACTION_ERROR",
+    payload: {},
+  });
+}
+
 export function* transactionSagaWatcher() {
   yield all([
     takeEvery("TOP_UP", topUpSaga),
@@ -151,5 +165,6 @@ export function* transactionSagaWatcher() {
     takeEvery("TOP_UP_SUCCESS", topUpSuccessSaga),
     takeEvery("FETCH_TRANSACTIONS", getTransactionsSaga),
     takeEvery("INITIATE_TRANSACTION", transactionPaymentSaga),
+    takeEvery("TRANSACTION_SUCCESS", transactionSuccessSaga),
   ]);
 }
