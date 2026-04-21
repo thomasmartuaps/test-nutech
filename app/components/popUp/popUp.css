@@ -91,6 +91,10 @@
   color: #ff3b30;
 }
 
+.error-message-section {
+  margin-top: 15px;
+}
+
 /* Footer Link */
 .popup-footer {
   width: 100%;

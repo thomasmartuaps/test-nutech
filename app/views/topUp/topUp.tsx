@@ -63,10 +63,6 @@ const TopUp = () => {
 
   const isTopUpDisabled = topUpValue.trim() === "";
 
-  const displayedTopUpValue = topUpValue
-    ? new Intl.NumberFormat("de-DE").format(parseInt(topUpValue))
-    : "";
-
   return (
     <div>
       <Dashboard selectedMenu="top-up">
@@ -81,7 +77,7 @@ const TopUp = () => {
               <i className="bi bi-credit-card"></i>{" "}
               <input
                 type="text"
-                value={displayedTopUpValue}
+                value={topUpValue}
                 onChange={handleInputChange}
                 placeholder={`masukkan nominal top-up`}
                 className="topup-input"
@@ -128,6 +124,7 @@ const TopUp = () => {
         amount={topUpValue}
         mode={isTopUpSuccess ? "success" : "error"}
         menuName={"topup"}
+        errorMessage={topUpErrorMessage}
       />
     </div>
   );

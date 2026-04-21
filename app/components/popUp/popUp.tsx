@@ -11,6 +11,7 @@ interface PopUpProps {
   menuName: "topup" | "transaction" | "registration";
   serviceName?: string;
   onConfirm?: () => void;
+  errorMessage?: string;
 }
 
 const PopUp = ({
@@ -21,6 +22,7 @@ const PopUp = ({
   menuName,
   serviceName,
   onConfirm,
+  errorMessage,
 }: PopUpProps) => {
   const handleConfirm = () => {
     if (onConfirm) {
@@ -75,6 +77,11 @@ const PopUp = ({
                     {mode === "success" ? "berhasil!" : "gagal"}
                   </p>
                 )}
+              </div>
+            ) : null}
+            {errorMessage ? (
+              <div className={"error-message-section"}>
+                <p className="popup-message error">{errorMessage}</p>
               </div>
             ) : null}
           </div>

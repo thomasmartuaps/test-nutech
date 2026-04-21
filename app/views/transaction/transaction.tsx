@@ -93,6 +93,7 @@ const Transaction = () => {
         mode={isTransactionSuccess ? "success" : "error"}
         menuName={"transaction"}
         serviceName={serviceName}
+        errorMessage={transactionErrorMessage}
       />
     </Dashboard>
   );

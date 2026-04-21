@@ -1,4 +1,4 @@
-import { all, call, put, take, takeEvery } from "redux-saga/effects";
+import { all, call, put, takeEvery } from "redux-saga/effects";
 import { getBalance, getTransactions, initiateTransaction, topUp } from "~/api";
 import type { ResponseData, Transaction } from "~/types";
 import token from "~/utils/token";
@@ -37,31 +37,47 @@ function* topUpSaga(action: TransactionAction) {
   if (action.type !== "TOP_UP") {
     return;
   }
-  const tokenValue = token.get();
-  if (!tokenValue) {
-    console.error("No token found. User might not be logged in.");
-    throw new Error("No token found. User might not be logged in.");
-  }
-  const res: ResponseData<{ token: string }> = yield call(topUp, {
-    token: tokenValue,
-    amount: action.payload.amount,
-  });
-  if (res.status !== 0) {
-    if (res.status === 108) {
-      token.remove();
+  try {
+    const tokenValue = token.get();
+    if (!tokenValue) {
+      console.error("No token found. User might not be logged in.");
+      throw new Error("No token found. User might not be logged in.");
+    }
+    if (action.payload.amount > 1000000) {
+      yield put({
+        type: "SET_TOP_UP_ERROR",
+        payload: {
+          error: "Batas maksimum topup Rp1.000.000",
+        },
+      });
       return;
     }
-    yield put({
-      type: "SET_TOP_UP_ERROR",
-      payload: { error: res.message ?? "Failed to top up balance." },
+    yield call(topUp, {
+      token: tokenValue,
+      amount: action.payload.amount,
     });
-    return;
-  }
 
-  yield put({
-    type: "TOP_UP_SUCCESS",
-    payload: {},
-  });
+    yield put({
+      type: "TOP_UP_SUCCESS",
+      payload: {},
+    });
+  } catch (error: any) {
+    const status = error.response.data.status;
+
+    if (status !== 0) {
+      if (status === 108) {
+        token.remove();
+        return;
+      }
+      yield put({
+        type: "SET_TOP_UP_ERROR",
+        payload: {
+          error: error.response.data.message ?? "Failed to top up balance.",
+        },
+      });
+      return;
+    }
+  }
 }
 
 export function* topUpSuccessSaga(action: TransactionAction) {
@@ -169,7 +185,22 @@ export function* transactionPaymentSaga(action: TransactionAction) {
         transaction: res.data,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
+    const status = error.response.data.status;
+    if (status !== 0) {
+      if (status === 108) {
+        token.remove();
+        return;
+      }
+      yield put({
+        type: "TRANSACTION_FAILED",
+        payload: {
+          error:
+            error.response.data.message ?? "Failed to initiate transaction.",
+        },
+      });
+      return;
+    }
     console.error("Error initiating transaction:", error);
   }
 }
