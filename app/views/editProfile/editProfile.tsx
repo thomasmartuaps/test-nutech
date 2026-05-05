@@ -119,7 +119,14 @@ const EditProfile: React.FC = () => {
     if (editProfileSuccessMessage) {
       setIsEditable(false); // Change button after edit user is confirmed success from API
     }
-  });
+  }, [editProfileSuccessMessage, setIsEditable]);
+
+  useEffect(() => {
+    dispatch({
+      type: "CLEAR_EDIT_MESSAGES",
+      payload: {},
+    });
+  }, [dispatch]);
 
   return (
     <Dashboard selectedMenu="account">

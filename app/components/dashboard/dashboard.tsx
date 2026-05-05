@@ -31,13 +31,11 @@ const Dashboard = ({ children, selectedMenu }: DashboardProps) => {
   }, [dispatch, user]);
 
   useEffect(() => {
-    if (!balance) {
-      dispatch({
-        type: "GET_BALANCE",
-        payload: {},
-      });
-    }
-  }, [dispatch, balance]);
+    dispatch({
+      type: "GET_BALANCE",
+      payload: {},
+    });
+  }, [dispatch]);
 
   return (
     <div className="dashboard">
